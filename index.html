@@ -3488,6 +3488,7 @@ function verzamelData() {
     budget: budgetVals,
     sponsors: sponsorsOpslaan,
     taken: taken,
+    verwijderdeTaken: verwijderdeTaken,
     vrijwilligers: vrijwilligers,
     draaiboek: draaiboek,
     draaiboekVrijdag: draaiboekVrijdag,
@@ -3535,14 +3536,21 @@ function verwerkData(data) {
     });
     vrijwilligers = cloudVrijw;
   }
+  if (data.verwijderdeTaken && Array.isArray(data.verwijderdeTaken)) {
+    data.verwijderdeTaken.forEach(function(a) {
+      if (verwijderdeTaken.indexOf(a) === -1) verwijderdeTaken.push(a);
+    });
+  }
   if (data.taken && Array.isArray(data.taken)) {
     // Samenvoegen: cloud taken bewaren + nieuwe defaults toevoegen die nog niet in cloud zitten
     var cloudTaken = data.taken;
     var defaultTaken = taken; // de taken uit de HTML defaults
     // Voeg toe: taken die in defaults zitten maar niet in cloud (op basis van actie-tekst)
+    // én niet handmatig verwijderd zijn
     var cloudActies = cloudTaken.map(function(t) { return t.actie.trim().toLowerCase(); });
     defaultTaken.forEach(function(dt) {
-      if (cloudActies.indexOf(dt.actie.trim().toLowerCase()) === -1) {
+      var actieKey = dt.actie.trim().toLowerCase();
+      if (cloudActies.indexOf(actieKey) === -1 && verwijderdeTaken.indexOf(actieKey) === -1) {
         cloudTaken.push(dt);
       }
     });
@@ -4426,6 +4434,8 @@ var teams = [
   { naam: 'Overige',       icon: '\u2728',        lead: 'Overige leden Lions Club' }
 ];
 
+var verwijderdeTaken = []; // actieteksten van handmatig verwijderde taken
+
 var taken = [
   { actie: 'Pendelbusjes voor BUTE regelen', leverancier: 'TBO', opmerking: '', team: 'Logistiek', wie: 'Arie Bruin' },
   { actie: 'Bonte Belevenis vastleggen', leverancier: 'Joscha en Inge Schoots', opmerking: 'info@landgoeddebontebelevenis.nl', team: 'Coördinatie', wie: 'Maarten-Jeroen' },
@@ -4686,6 +4696,8 @@ function toggleDone(idx) {
 
 function verwijderTaak(idx) {
   if (!confirm('Taak "' + taken[idx].actie + '" verwijderen?')) return;
+  var verwijderdeActie = taken[idx].actie.trim().toLowerCase();
+  if (verwijderdeTaken.indexOf(verwijderdeActie) === -1) verwijderdeTaken.push(verwijderdeActie);
   taken.splice(idx, 1);
   // Rebuild doneState keys
   var newDone = {};
