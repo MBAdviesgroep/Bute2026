@@ -3715,10 +3715,24 @@ function slaOpMet(wat) {
   slaOp();
 }
 
+// Debounce-timer zodat snelle opeenvolgende acties gebundeld worden tot één save
+var _debounceTimer = null;
+
 function slaOp() {
+  // Toon direct "opslaan..." zodat de gebruiker feedback krijgt
+  setStatus('Opslaan...', 'laden');
+  // Debounce: wacht 800ms; als er binnen die tijd nog een slaOp() binnenkomt,
+  // reset de timer. Zo wordt bijv. snel meerdere checkboxes aanvinken
+  // één enkel verzoek naar de cloud in plaats van tien.
+  clearTimeout(_debounceTimer);
+  _debounceTimer = setTimeout(function() {
+    _doSlaOp();
+  }, 800);
+}
+
+function _doSlaOp() {
   if (isSaving) { pendingSave = true; return; }
   isSaving = true;
-  setStatus('Opslaan...', 'laden');
   var data = verzamelData();
   // Altijd lokaal backuppen vóór cloud-opslag
   try { localStorage.setItem('bute2026_backup', JSON.stringify(data)); } catch(e) {}
@@ -3727,7 +3741,7 @@ function slaOp() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); isSaving = false; if (data._versie) { lastSaveVersion = data._versie; logWijziging(huidigGebruiker || 'Onbekend', data._versie, window._laatsGewijzigdWat || ''); window._laatsGewijzigdWat = ''; } setStatus('\u2714 Opgeslagen voor iedereen', 'ok'); if (pendingSave) { pendingSave = false; slaOp(); } })
+  .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); isSaving = false; if (data._versie) { lastSaveVersion = data._versie; logWijziging(huidigGebruiker || 'Onbekend', data._versie, window._laatsGewijzigdWat || ''); window._laatsGewijzigdWat = ''; } setStatus('\u2714 Opgeslagen voor iedereen', 'ok'); if (pendingSave) { pendingSave = false; _doSlaOp(); } })
   .catch(function(e) { isSaving = false; console.error(e); setStatus('\u26a0 Cloud mislukt — lokaal bewaard', 'fout'); });
 }
 
@@ -3738,8 +3752,8 @@ document.addEventListener('input', function(e) {
     clearTimeout(budgetSaveTimer);
     budgetSaveTimer = setTimeout(function() {
       renderDashboard(); // dashboard pas updaten bij opslaan
-      slaOp();
-    }, 1000);
+      slaOp(); // slaOp heeft eigen debounce van 800ms, dus geen dubbele save
+    }, 400); // UI-feedback snel, cloud-save volgt via debounce
   }
 });
 
