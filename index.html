@@ -3262,7 +3262,7 @@ function startConflictCheck() {
         }
       }
     }).catch(function(){});
-  }, 45000);
+  }, 15000);
 }
 
 function herlaadVanCloud() {
@@ -3729,13 +3729,13 @@ var _debounceTimer = null;
 function slaOp() {
   // Toon direct "opslaan..." zodat de gebruiker feedback krijgt
   setStatus('Opslaan...', 'laden');
-  // Debounce: wacht 800ms; als er binnen die tijd nog een slaOp() binnenkomt,
+  // Debounce: wacht 400ms; als er binnen die tijd nog een slaOp() binnenkomt,
   // reset de timer. Zo wordt bijv. snel meerdere checkboxes aanvinken
   // één enkel verzoek naar de cloud in plaats van tien.
   clearTimeout(_debounceTimer);
   _debounceTimer = setTimeout(function() {
     _doSlaOp();
-  }, 800);
+  }, 400);
 }
 
 function _doSlaOp() {
@@ -3829,7 +3829,7 @@ function verwijderBudgetRij(btn) {
   tr.remove();
   herbereken();
   clearTimeout(budgetSaveTimer);
-  budgetSaveTimer = setTimeout(slaOp, 800);
+  budgetSaveTimer = setTimeout(slaOp, 400);
 }
 
 // ── AFTELLER ───────────────────────────────────────────────
@@ -4257,7 +4257,7 @@ function toggleVorigJaar() {
           window._savedVorigJaar = window._savedVorigJaar || {};
           window._savedVorigJaar[vjKey] = inp.value;
           clearTimeout(window.vjSaveTimer);
-          window.vjSaveTimer = setTimeout(slaOp, 800);
+          window.vjSaveTimer = setTimeout(slaOp, 400);
         });
         td.appendChild(inp);
         valEl.parentNode.parentNode.insertBefore(td, valEl.parentNode.nextSibling);
