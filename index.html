@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -2315,7 +2314,7 @@ h2.pdf-title, p.pdf-subtitle { display: none; }
     <div class="login-title">BUTE 2026</div>
     <div class="login-sub">Wie ben jij? Kies je naam om door te gaan.</div>
     <span class="login-label">Teamleden</span>
-    <div class="login-members" id="login-members-grid"></div>
+    <div class="login-members" id="login-members-grid"><button class="login-member-btn" onclick="selecteerLid(this,'Maarten-Jeroen den Boer')">Maarten-Jeroen den Boer</button><button class="login-member-btn" onclick="selecteerLid(this,'Morten Eschweiler')">Morten Eschweiler</button><button class="login-member-btn" onclick="selecteerLid(this,'Ben Rentenaar')">Ben Rentenaar</button><button class="login-member-btn" onclick="selecteerLid(this,'Paul Krugers')">Paul Krugers</button><button class="login-member-btn" onclick="selecteerLid(this,'Kees Dros')">Kees Dros</button><button class="login-member-btn" onclick="selecteerLid(this,'Jan Klok')">Jan Klok</button><button class="login-member-btn" onclick="selecteerLid(this,'Jeroen van Hattum')">Jeroen van Hattum</button><button class="login-member-btn" onclick="selecteerLid(this,'Frank Spooren')">Frank Spooren</button><button class="login-member-btn" onclick="selecteerLid(this,'Daniel Bonne')">Daniel Bonne</button><button class="login-member-btn" onclick="selecteerLid(this,'Arie Bruin')">Arie Bruin</button></div>
     <div class="login-divider">— of vul je naam in —</div>
     <div class="login-custom">
       <input type="text" id="login-custom-input" placeholder="Jouw naam..." maxlength="40">
@@ -2350,6 +2349,7 @@ h2.pdf-title, p.pdf-subtitle { display: none; }
     <button class="tab-btn" id="btn-vrijwilligers" onclick="showTab('vrijwilligers', this)">🙋<span class="tab-label"> Vrijwilligers</span></button>
     <button class="tab-btn" id="btn-draaiboek" onclick="showTab('draaiboek', this)">📋<span class="tab-label"> Draaiboek</span></button>
     <button class="tab-btn" id="btn-telefoon" onclick="showTab('telefoon', this)">📞<span class="tab-label"> Telefoon</span></button>
+    <button class="tab-btn" id="btn-veilingkavels" onclick="showTab('veilingkavels', this)">🔨<span class="tab-label"> Veilingkavels</span></button>
   </div>
   <button class="sync-btn" onclick="laadVanCloud()" title="Ververs data van de server">↻ Vernieuwen</button>
 </div>
@@ -3011,6 +3011,49 @@ h2.pdf-title, p.pdf-subtitle { display: none; }
     <button class="pdf-btn" onclick="printTab('tab-telefoon')" style="margin-top:18px">⬇ PDF afdrukken</button>
   </div>
 
+  <!-- VEILINGKAVELS -->
+  <div id="tab-veilingkavels" class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;">
+      <div>
+        <div class="section-title">🔨 Veilingkavels</div>
+        <p class="section-sub">Beheer alle kavels voor de Lions-veiling. Totaal: <span id="kavel-count" style="font-weight:700;color:#E8A000;">0</span> / 25 kavels</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="tel-add-btn" onclick="openKavelModal(-1)" style="display:flex;align-items:center;gap:6px;">➕ Kavel toevoegen</button>
+        <button class="pdf-btn" onclick="printTab('tab-veilingkavels')">⬇ PDF</button>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid rgba(232,160,0,0.28);border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:0.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#7A6030;">📊 Voortgang kavels</span>
+        <span id="kavel-pct" style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;color:#1C1400;">0 / 25</span>
+      </div>
+      <div style="height:8px;background:rgba(232,160,0,0.15);border-radius:4px;overflow:hidden;">
+        <div id="kavel-progress-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#9B59B6,#7D3C98);border-radius:4px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;">
+        <span id="kavel-stat-ophoud" style="font-size:0.72rem;color:#9A8050;"></span>
+        <span id="kavel-stat-biedingen" style="font-size:0.72rem;color:#9A8050;"></span>
+      </div>
+    </div>
+    <div class="tel-table-wrap">
+      <table class="tel-table" id="kavel-table" style="table-layout:fixed;width:100%;">
+        <thead>
+          <tr>
+            <th style="width:48px">Nr.</th>
+            <th>Product / Omschrijving</th>
+            <th style="width:110px">Ophoudprijs</th>
+            <th style="width:110px">Hoogste Bod</th>
+            <th>Extra gegevens</th>
+            <th style="width:140px">Inbrenger</th>
+            <th style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody id="kavel-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
 </div><!-- end content -->
 
 <footer>
@@ -3507,6 +3550,7 @@ function verzamelData() {
     _gewijzigdDoor: huidigGebruiker || 'Onbekend',
     _gewijzigdWat: window._laatsGewijzigdWat || '',
     _log: wijzigingLog.slice(0, 30),
+    veilingkavels: veilingkavels,
     _online: (function() {
       var nu = Date.now();
       var online = window._onlineGebruikers || {};
@@ -3575,6 +3619,15 @@ function verwerkData(data) {
     window._savedVorigJaar = data.budgetVorigJaar;
   }
   if (data.naturaSponsor && Array.isArray(data.naturaSponsor)) { naturaSponsor = data.naturaSponsor; renderNatura(); }
+  if (data.veilingkavels && Array.isArray(data.veilingkavels)) {
+    data.veilingkavels.forEach(function(ck) {
+      var idx = -1;
+      for (var i = 0; i < veilingkavels.length; i++) { if (veilingkavels[i].nummer === ck.nummer) { idx = i; break; } }
+      if (idx >= 0) veilingkavels[idx] = ck; else veilingkavels.push(ck);
+    });
+    veilingkavels.sort(function(a,b){ return a.nummer - b.nummer; });
+    renderVeilingkavels();
+  }
   if (data.werkplekken && Array.isArray(data.werkplekken)) {
     data.werkplekken.forEach(function(w) {
       if (!w.minDagen) w.minDagen = {};
@@ -3633,8 +3686,15 @@ function verwerkData(data) {
     Object.keys(data.sponsors).forEach(function(k) {
       if (sponsorData[k]) {
         var cloudEntries = data.sponsors[k] || [];
-        // Gebruik cloud als die entries heeft, anders val terug op code-defaults
         if (cloudEntries.length > 0) {
+          // Samenvoegen: cloud is leidend, maar voeg code-defaults toe die nog NIET in cloud zitten (op naam)
+          var cloudNamen = cloudEntries.map(function(e) { return (e.naam||'').trim().toLowerCase(); });
+          var codeDefaults = sponsorData[k].entries || [];
+          codeDefaults.forEach(function(d) {
+            if (cloudNamen.indexOf((d.naam||'').trim().toLowerCase()) === -1) {
+              cloudEntries.push(d);
+            }
+          });
           sponsorData[k].entries = cloudEntries;
         }
         // Als cloud leeg is, blijven de code-defaults staan
@@ -4513,7 +4573,7 @@ var taken = [
   { actie: 'Bericht sturen in Tigers app groep – wie kan en wie niet', leverancier: '', opmerking: '', team: 'Overige', wie: 'Astrid van der Vis' },
   { actie: 'Vrijwilligerslunch voor zaterdag en zondag bij TX Catering regelen', leverancier: 'TX Catering', opmerking: '', team: 'Horeca', wie: 'Kees Dros', teams: ['Horeca'] },
   { actie: 'Kinderactiviteitenteam samenstellen – vrijwilligers Suzanne Reijnders, Titia Klok & Ilse Bonne (gehele zaterdag)', leverancier: '', opmerking: 'Geleid door Jan Klok', team: 'Kinderactiviteiten', wie: 'Jan Klok', teams: ['Kinderactiviteiten'] },
-  { actie: 'QR codes aanmaken voor betaling – entree, strippenkaart, veiling en horeca', leverancier: '', opmerking: '', team: 'Coördinatie', wie: 'Maarten-Jeroen den Boer', teams: ['Coördinatie'] },,
+  { actie: 'QR codes aanmaken voor betaling – entree, strippenkaart, veiling en horeca', leverancier: '', opmerking: '', team: 'Coördinatie', wie: 'Maarten-Jeroen den Boer', teams: ['Coördinatie'] },
 ];
 
 var doneState = {};
@@ -4769,27 +4829,63 @@ function herbereken() {
 
 // ── SPONSOREN ──────────────────────────────────────────────
 var sponsorData = {
-  'partner-a':  { naam: 'Partnerpakket A – Hoofdsponsor', prijs: 1000, entries: [] },
+  'partner-a':  { naam: 'Partnerpakket A – Hoofdsponsor', prijs: 1000, entries: [
+    { naam: 'TESO',                            contact: 'Mario Prak',               email: 'directie@teso.nl',                  telefoon: '', status: 'afgesloten', notitie: '' }
+  ]},
   'pakket-b':   { naam: 'Partnerpakket B', prijs: 250, entries: [
-    { naam: 'MB Adviesgroep BV',            contact: 'Maarten-Jeroen den Boer', email: 'Maartenjeroen@mbadviesgroep.nl', telefoon: '06 50528718', status: 'afgesloten', notitie: '' },
-    { naam: 'Rekenmaatje BV',               contact: 'Astrid van der Vis',      email: 'Astrid@rekenmaatje.nl',          telefoon: '06 50528719', status: 'afgesloten', notitie: '' },
-    { naam: 'Schouwstra Transport BV',      contact: 'Jan Schouwstra',           email: 'mail@schouwstra.com',            telefoon: '06 45677565', status: 'afgesloten', notitie: 'factuur opsturen' },
-    { naam: 'NBC Eelman & Partners',        contact: 'Sandra Koning - Nijboer',  email: 'communicatie@nbceelman.nl',      telefoon: '0222 314141', status: 'afgesloten', notitie: 'Sponsorblad ondertekend' },
-    { naam: 'Jord Kuiken',                  contact: 'Jord Kuiken',              email: 'info@jordkuiken.nl',             telefoon: '06 4195270', status: 'afgesloten', notitie: '' },
-    { naam: 'Assurantiekantoor Texel',      contact: 'Niels Jimmink',            email: 'Niels@aktexel.nl',              telefoon: '0222 312 315', status: 'afgesloten', notitie: '' },
-    { naam: 'Hanos Texel',                  contact: 'Dhr. R. Kleinveld',        email: 'rkleinveld@hanos.nl',           telefoon: '0222 312669', status: 'afgesloten', notitie: '' },
-    { naam: 'Wezenspyck',                   contact: 'Job Witte',                email: 'info@wezenspyck.nl',            telefoon: '06 81078993', status: 'afgesloten', notitie: '' }
+    { naam: 'MB Adviesgroep BV',               contact: 'Maarten-Jeroen den Boer',  email: 'Maartenjeroen@mbadviesgroep.nl',     telefoon: '06 50528718', status: 'afgesloten', notitie: '' },
+    { naam: 'Rekenmaatje BV',                  contact: 'Astrid van der Vis',       email: 'Astrid@rekenmaatje.nl',              telefoon: '06 50528719', status: 'afgesloten', notitie: '' },
+    { naam: 'Schouwstra Scandinavian Transports BV', contact: 'Jan Schouwstra',     email: 'mail@schouwstra.com',                telefoon: '06 45677565', status: 'afgesloten', notitie: '' },
+    { naam: 'NBC Eelman & Partners B.V.',      contact: 'Sandra Koning',            email: 'communicatie@nbceelman.nl',          telefoon: '0222 314141', status: 'afgesloten', notitie: '' },
+    { naam: 'Jord Kuiken',                     contact: 'Jord Kuiken',              email: 'info@jordkuiken.nl',                 telefoon: '06 4195270',  status: 'afgesloten', notitie: '' },
+    { naam: 'Assurantiekantoor Texel',         contact: 'Niels Jimmink',            email: 'Niels@aktexel.nl',                  telefoon: '0222 312 315', status: 'afgesloten', notitie: '' },
+    { naam: 'Hanos',                           contact: 'Ronald Kleinveld',         email: 'rkleinveld@hanos.nl',               telefoon: '0222 312669', status: 'afgesloten', notitie: '' },
+    { naam: 'Fa. Witte Wezenspyk',             contact: 'Job Witte',                email: 'info@wezenspyk.nl',                 telefoon: '06 81078993', status: 'afgesloten', notitie: '' },
+    { naam: 'Bouw2020',                        contact: 'Arie Bruin',               email: 'info@bouw2020.nl',                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Bouwbedrijf Texel',               contact: 'Willem Houwing',           email: 'Willemhouwing@gmail.com',            telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Heemskerk en jongewaard Taxateurs den helder', contact: 'Mark Heemskerk', email: '',                               telefoon: '', status: 'afgesloten', notitie: 'NOG FACTURATIE' },
+    { naam: 'Jumbo Texel',                     contact: 'Sjoerd de Jong',           email: 'Sjoerd.dejong@jumbo.com',           telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Notariskantoor Hoogerheide B.V.', contact: 'Marjon Hoogerheide',       email: '',                                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Oudeland Texel / Karting',        contact: 'Daan Kappert',             email: 'info@oudelandtexel.nl',             telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Restaurant De Taveerne',          contact: 'R.D. Rozeboom',            email: 'advburpvg@texel.com',               telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'SBR Administraties',              contact: 'Suzanne Roeper',           email: 'suzanne@sbradministraties.nl',       telefoon: '', status: 'afgesloten', notitie: 'NOG FACTURATIE' },
+    { naam: 'Vakantiepark De Krim',            contact: 'Iwan Groothuis',           email: 'jolanda.kamphuis@krim.nl',          telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'VLNN Makelaars',                  contact: 'Jurjen Nannenga',          email: 'Makelaars@vlnn.nl',                 telefoon: '', status: 'afgesloten', notitie: '' }
   ]},
   'pakket-c':   { naam: 'Partnerpakket C', prijs: 150, entries: [
-    { naam: 'Aannemingsbedrijf Tatenhoven', contact: 'Willem & Caroline',        email: 'Tatenhove@texel.com',           telefoon: '0222-313809', status: 'afgesloten', notitie: '' },
-    { naam: 'Schoonmaakdiensten Texel BV', contact: 'Esther Vonk',              email: 'info@gewoon-schoon.nl',         telefoon: '06 25012820', status: 'afgesloten', notitie: '' }
+    { naam: 'Tatenhove',                       contact: 'C. Ran',                   email: 'tatenhove@texel.com',               telefoon: '0222-313809', status: 'afgesloten', notitie: '' },
+    { naam: 'Schoonmaakdiensten Texel B.V.',   contact: 'Dennis Vonk',              email: 'info@gewoon-schoon.nl',             telefoon: '06 25012820', status: 'afgesloten', notitie: '' },
+    { naam: 'Café-Restaurant Vogelhuis Oranjerie B.V.', contact: 'Anton van der Vis', email: 'antonvandervis@texel.com',        telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'CVI Texel',                       contact: 'Peerke Reijnders',         email: 'Peerke@cvi-texel.nl',              telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'JMJ Ambachtsatelier Texel',       contact: 'Jacqueline Jimmink',       email: 'info@jacquelinejimmink.com',        telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Qsenz',                           contact: 'Ewout Riteco',             email: 'administratie@qsenz.nl',           telefoon: '', status: 'afgesloten', notitie: '' }
   ]},
   'advertentie':{ naam: 'Advertentie', prijs: 100, entries: [
-    { naam: 'Aldubo BV',                   contact: 'Mees den Boer',            email: 'Mees@mbadviesgroep.nl',         telefoon: '06 30449898', status: 'afgesloten', notitie: '' },
-    { naam: 'Credion MB Amsterdam',         contact: 'Hans Eelman',              email: 'Hans@Mbadviesgroep.nl',         telefoon: '06 80093938', status: 'afgesloten', notitie: '' },
-    { naam: 'Waddenhaven Texel B.V.',       contact: 'W.M. Oosterhaven',         email: 'info@waddenhaven.nl',           telefoon: '06 57553406', status: 'afgesloten', notitie: '' },
-    { naam: 'Van Sambeek Truck Service',    contact: 'Marco van Sambeek',        email: 'administratie@vansambeek.com', telefoon: '0222 315353', status: 'afgesloten', notitie: '' },
-    { naam: 'Iris Business Support',        contact: 'Irisabella Bakker',        email: 'info@irissupport.nl',           telefoon: '06 53245253', status: 'afgesloten', notitie: '' }
+    { naam: 'Aldubo BV',                       contact: 'Mees den Boer',            email: 'Mees@mbadviesgroep.nl',             telefoon: '06 30449898', status: 'afgesloten', notitie: '' },
+    { naam: 'Credion MB Amsterdam',            contact: 'Hans Eelman',              email: 'Hans@Mbadviesgroep.nl',             telefoon: '06 80093938', status: 'afgesloten', notitie: '' },
+    { naam: 'Waddenhaven Texel B.V.',          contact: 'W.M. Oosterhaven',         email: 'info@waddenhaven.nl',               telefoon: '06 57553406', status: 'afgesloten', notitie: '' },
+    { naam: 'Van Sambeek Truck Service',       contact: 'Marco van Sambeek',        email: 'administratie@vansambeek.com',      telefoon: '0222 315353', status: 'afgesloten', notitie: '' },
+    { naam: 'Iris Business Support',           contact: 'Irisabella Bakker',        email: 'info@irissupport.nl',               telefoon: '06 53245253', status: 'afgesloten', notitie: '' },
+    { naam: 'ABH Stukadoors',                  contact: 'Jan Velthuis',             email: 'info@abh-stukadoors.nl',            telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Assurantiekantoor Bremer',        contact: 'Ineke Bremer',             email: 'info@bremer-texel.nl',              telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Beeloud BV',                      contact: 'Sven Schagen',             email: 'Info@beeloud.nl',                   telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'BK Investments',                  contact: 'Jeroen de Bruijn',         email: 'j.d.bruijn@continu.nl',            telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Bosma slapen en Meer',            contact: 'Menno Bosma',              email: 'info@bosmaslaapen.nl',              telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Café Restaurant De Slufter',      contact: 'H. van der Star',          email: 'info@deslufter.nl',                 telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Camping Coogherveld Texel',       contact: 'Marjan van de Reijken',    email: 'info@coogherveld.nl',               telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Drogisterij Etos (Komen\'s Drogisterij Texel BV)', contact: 'Monique Huiberts', email: 'etostexel@komeinvastgoed.in', telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Golfbaan De Texelse',             contact: 'Administratie',            email: 'facturen.texelse@gmail.com',        telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Jojo Mode V.O.F.',                contact: 'Lotte van de Belt',        email: 'jojomodetexel@gmail.com',           telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Joop Rommets',                    contact: 'Rommets',                  email: 'jooprommets@gmail.com',             telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Kortekaas & Kooijman',            contact: 'Richard Kortekaas',        email: 'info@kortekaasenkooijman.nl',       telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Krofft Visuals',                  contact: 'Stefan Krofft',            email: 'info@krofftvisu.als',               telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Makelaardij Texel Vastgoed',      contact: 'Joost Coutinho',           email: '',                                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'MB Hypotheken',                   contact: 'Administratie',            email: 'mbadviesgroep.nl',                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Modehuis Moerbeek',               contact: 'Ingmar Moerbeek',          email: '',                                  telefoon: '', status: 'afgesloten', notitie: 'NOG FACTURATIE' },
+    { naam: 'Nauta boek',                      contact: 'Jook Nauta',               email: 'nautex@planet.nl',                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Strandpaviljoen Paal 9 BV',       contact: 'Rene Jager',               email: 'info@paal9.nl',                     telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Vakatieburo Kobeko',              contact: 'Dave Dijkstra',            email: 'info@kobeko.nl',                    telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'VOF Deco-Sport',                  contact: 'Robin Schoo',              email: 'sportshoptexel@gmail.com',          telefoon: '', status: 'afgesloten', notitie: '' }
   ]},
   'kraam':      { naam: 'Commerciële kraam', prijs: 125, entries: [] },
   'mini-kraam': { naam: 'Goede doelen / vereniging kraam', prijs: 0, entries: [] }
@@ -6224,11 +6320,149 @@ window.addEventListener('load', function() {
   renderNatura();
   renderWerkplekList();
   renderDashboard();
+  renderVeilingkavels();
   updateDbClock();
   setInterval(updateDbClock, 30000);
   laadVanCloud();
   startConflictCheck();
 });
+
+// ── VEILINGKAVELS ─────────────────────────────────────────
+var veilingkavels = (function() {
+  var k = [];
+  for (var i = 1; i <= 25; i++) k.push({ nummer: i, product: '', ophoudprijs: '', hoogstebod: '', extra: '', inbrenger: '' });
+  var d = [
+    { nummer:1,  product:'Teso aandeel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' },
+    { nummer:2,  product:'Teso aandeel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' },
+    { nummer:3,  product:'Teso aandeel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' },
+    { nummer:4,  product:'Handgegraveerde hanger met ketting, Zegel van Texel', ophoudprijs:'395', hoogstebod:'', extra:'Hoogste bieder ontvangt als extra een gratis gravure van 2 initialen', inbrenger:'' },
+    { nummer:5,  product:'Serie producten kleintje van gert', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Jeroen van hattum' },
+    { nummer:6,  product:'Reliquen sinterklaarjournaal 2025', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Jeroen van hattum' },
+    { nummer:7,  product:'BBQ', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'David Tijssen' },
+    { nummer:8,  product:'Twee Kaartejes Sompop met Meet en Greet', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Ben Rentenaar' },
+    { nummer:9,  product:'Partij Haardhout', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Willem van Tatenhoven' },
+    { nummer:10, product:'Pub Kwis voor bij u Thuis of op kantoor', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Rodny Stolk' },
+    { nummer:11, product:'Rondvlucht historische vlieger', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Mike de Bruin' },
+    { nummer:12, product:'Limo tour Texel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Limo Taxi' },
+    { nummer:13, product:'Mailtje Grookte Poon', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Lions' },
+    { nummer:14, product:'Mailtje Gerookt Slippies', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Lions' },
+    { nummer:15, product:'Kaartjes voor Broadway 2 personen zondag', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'MJ' },
+    { nummer:16, product:'Rondrit rondom den Hoorn met Koets en paarden', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Jaap Lap' },
+    { nummer:17, product:'Rondleiding van natuurboer Benno Bakker door De Geul voor 2 pers', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Benno Bakker' },
+    { nummer:18, product:'Vlees in Blik Assortiment van Slagerij Moorman en De Boer', ophoudprijs:'100', hoogstebod:'', extra:'', inbrenger:'Kees Moorman' },
+    { nummer:19, product:'Voor 4 personen Karten bij Karting Texel nabij de Akenbuurt', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'VV Racing BV' },
+    { nummer:20, product:'Behandeling bij Beauty Outline in de Koog Martine van Hintum', ophoudprijs:'100', hoogstebod:'', extra:'Luxe Cosmetische Pedicure en Relaxing Massage', inbrenger:'Martine van Hintum' },
+    { nummer:21, product:'Kunstwerk Waddenbluese', ophoudprijs:'125', hoogstebod:'', extra:'Gemengde Techniek, zelfgejutte mosselen in een Delfsblauw Jasje 50 bij 70 cm', inbrenger:'Joke Cofino' },
+    { nummer:22, product:'Schilderij van Cecile de Boer', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' }
+  ];
+  d.forEach(function(item) { k[item.nummer - 1] = item; });
+  return k;
+})();
+
+var kavelEditIdx = null;
+
+function renderVeilingkavels() {
+  var tbody = document.getElementById('kavel-tbody');
+  if (!tbody) return;
+  var filled = veilingkavels.filter(function(k) { return k.product && k.product.trim(); }).length;
+  var el = document.getElementById('kavel-count'); if (el) el.textContent = filled;
+  var pe = document.getElementById('kavel-pct'); if (pe) pe.textContent = filled + ' / 25';
+  var pf = document.getElementById('kavel-progress-fill'); if (pf) pf.style.width = Math.round(filled/25*100) + '%';
+  var tO = 0, cO = 0, tB = 0, cB = 0;
+  veilingkavels.forEach(function(k) {
+    if (k.ophoudprijs && parseFloat(k.ophoudprijs) > 0) { tO += parseFloat(k.ophoudprijs); cO++; }
+    if (k.hoogstebod  && parseFloat(k.hoogstebod)  > 0) { tB += parseFloat(k.hoogstebod);  cB++; }
+  });
+  var s1 = document.getElementById('kavel-stat-ophoud');     if (s1) s1.textContent = '';
+  var s2 = document.getElementById('kavel-stat-biedingen');  if (s2) s2.textContent = cB > 0 ? '🔨 Biedingen: ' + cB + ' · €' + tB.toLocaleString('nl-NL') : '';
+  tbody.innerHTML = veilingkavels.map(function(k, i) {
+    var leeg = !k.product || !k.product.trim();
+    var nrStyle = leeg ? 'color:#C0A870;font-family:Barlow Condensed,sans-serif;font-size:0.95rem;font-weight:800;' : 'color:#9B59B6;font-family:Barlow Condensed,sans-serif;font-size:0.95rem;font-weight:800;';
+    var prijsHtml = k.ophoudprijs ? '<span style="font-family:Barlow Condensed,sans-serif;font-weight:700;color:#27AE60;">€\u202f' + parseFloat(k.ophoudprijs).toLocaleString('nl-NL') + '</span>' : '<span style="color:#C0A870;">—</span>';
+    var bodHtml  = k.hoogstebod  ? '<span style="font-family:Barlow Condensed,sans-serif;font-weight:700;color:#E8A000;">€\u202f' + parseFloat(k.hoogstebod).toLocaleString('nl-NL')  + '</span>' : '<span style="color:#C0A870;">—</span>';
+    var prodHtml = leeg ? '<span style="color:#C0A870;font-style:italic;font-size:0.82rem;">— Leeg —</span>' : '<span style="font-weight:600;color:#1C1400;">' + escHtml(k.product) + '</span>';
+    return '<tr style="' + (leeg ? 'opacity:0.5;' : '') + '">' +
+      '<td><span style="' + nrStyle + '">' + k.nummer + '</span></td>' +
+      '<td>' + prodHtml + '</td>' +
+      '<td>' + prijsHtml + '</td>' +
+      '<td>' + bodHtml + '</td>' +
+      '<td style="font-size:0.78rem;color:#7A6030;">' + escHtml(leeg ? '' : (k.extra || '')) + '</td>' +
+      '<td style="font-size:0.82rem;color:#5A4A20;">' + escHtml(leeg ? '' : (k.inbrenger || '')) + '</td>' +
+      '<td style="text-align:center;"><button onclick="openKavelModal(' + i + ')" title="Bewerken" style="background:none;border:1px solid rgba(232,160,0,0.4);border-radius:5px;color:#C0A870;cursor:pointer;padding:4px 8px;font-size:0.85rem;transition:all .15s;" onmouseover="this.style.background=\'#E8A000\';this.style.color=\'#1C1400\'" onmouseout="this.style.background=\'none\';this.style.color=\'#C0A870\'">✏</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function openKavelModal(idx) {
+  kavelEditIdx = idx;
+  var k = idx >= 0 ? veilingkavels[idx] : null;
+  var isNieuw = (idx === -1);
+  document.getElementById('kavel-modal-title').textContent = isNieuw ? '🔨 Kavel toevoegen' : '✏ Kavel ' + (k ? k.nummer : '') + ' bewerken';
+  var delBtn = document.getElementById('kavel-del-btn');
+  if (isNieuw) {
+    var slot = -1;
+    for (var i = 0; i < veilingkavels.length; i++) { if (!veilingkavels[i].product || !veilingkavels[i].product.trim()) { slot = i; break; } }
+    kavelEditIdx = slot;
+    document.getElementById('km-nummer').value = slot >= 0 ? veilingkavels[slot].nummer : '';
+    document.getElementById('km-product').value = '';
+    document.getElementById('km-ophoudprijs').value = '';
+    document.getElementById('km-hoogste-bod').value = '';
+    document.getElementById('km-extra').value = '';
+    document.getElementById('km-inbrenger').value = '';
+    if (delBtn) delBtn.style.display = 'none';
+  } else {
+    document.getElementById('km-nummer').value = k.nummer;
+    document.getElementById('km-product').value = k.product || '';
+    document.getElementById('km-ophoudprijs').value = k.ophoudprijs || '';
+    document.getElementById('km-hoogste-bod').value = k.hoogstebod || '';
+    document.getElementById('km-extra').value = k.extra || '';
+    document.getElementById('km-inbrenger').value = k.inbrenger || '';
+    if (delBtn) delBtn.style.display = (k.product && k.product.trim()) ? 'inline-block' : 'none';
+  }
+  document.getElementById('kavel-modal').classList.add('open');
+  setTimeout(function() { var p = document.getElementById('km-product'); if (p) p.focus(); }, 80);
+}
+
+function sluitKavelModal() {
+  document.getElementById('kavel-modal').classList.remove('open');
+  kavelEditIdx = null;
+}
+
+function slaanKavelOp() {
+  var nummer = parseInt(document.getElementById('km-nummer').value) || 0;
+  var product = document.getElementById('km-product').value.trim();
+  if (!product) { document.getElementById('km-product').focus(); return; }
+  var ophoud = document.getElementById('km-ophoudprijs').value.trim();
+  var bod = document.getElementById('km-hoogste-bod').value.trim();
+  var extra = document.getElementById('km-extra').value.trim();
+  var inbrenger = document.getElementById('km-inbrenger').value.trim();
+  var obj = { nummer: nummer, product: product, ophoudprijs: ophoud, hoogstebod: bod, extra: extra, inbrenger: inbrenger };
+  var target = -1;
+  for (var i = 0; i < veilingkavels.length; i++) { if (veilingkavels[i].nummer === nummer) { target = i; break; } }
+  if (target >= 0) {
+    veilingkavels[target] = obj;
+    if (kavelEditIdx >= 0 && kavelEditIdx !== target) veilingkavels[kavelEditIdx] = { nummer: veilingkavels[kavelEditIdx].nummer, product: '', ophoudprijs: '', hoogstebod: '', extra: '', inbrenger: '' };
+  } else if (kavelEditIdx >= 0) {
+    veilingkavels[kavelEditIdx] = obj;
+  } else {
+    veilingkavels.push(obj);
+    veilingkavels.sort(function(a,b){ return a.nummer - b.nummer; });
+  }
+  sluitKavelModal();
+  renderVeilingkavels();
+  slaOpMet('veilingkavel opgeslagen');
+}
+
+function verwijderKavel() {
+  if (kavelEditIdx < 0) return;
+  var k = veilingkavels[kavelEditIdx];
+  if (!confirm('Kavel ' + k.nummer + ' leegmaken?')) return;
+  veilingkavels[kavelEditIdx] = { nummer: k.nummer, product: '', ophoudprijs: '', hoogstebod: '', extra: '', inbrenger: '' };
+  sluitKavelModal();
+  renderVeilingkavels();
+  slaOpMet('veilingkavel verwijderd');
+}
+// ── EINDE VEILINGKAVELS ────────────────────────────────────
 
 </script>
 
@@ -6259,6 +6493,46 @@ window.addEventListener('load', function() {
       <div class="taak-modal-btns">
         <button class="taak-modal-cancel" onclick="sluitSponsorModal()">Annuleren</button>
         <button class="taak-modal-save" onclick="slaaSponsorOp()">Opslaan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VEILINGKAVEL MODAL -->
+  <div class="taak-modal-overlay" id="kavel-modal" onclick="if(event.target===this)sluitKavelModal()">
+    <div class="taak-modal" style="max-width:520px;">
+      <div class="taak-modal-title" id="kavel-modal-title">🔨 Kavel toevoegen</div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:12px;">
+        <div class="taak-modal-field">
+          <label>Kavelnr.</label>
+          <input id="km-nummer" type="number" min="1" max="99" placeholder="Nr.">
+        </div>
+        <div class="taak-modal-field">
+          <label>Product / Omschrijving</label>
+          <input id="km-product" type="text" placeholder="Naam of omschrijving van het kavel">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="taak-modal-field">
+          <label>Ophoudprijs (€)</label>
+          <input id="km-ophoudprijs" type="number" min="0" step="5" placeholder="0">
+        </div>
+        <div class="taak-modal-field">
+          <label>Hoogste Bod (€)</label>
+          <input id="km-hoogste-bod" type="number" min="0" step="5" placeholder="0">
+        </div>
+      </div>
+      <div class="taak-modal-field">
+        <label>Extra gegevens</label>
+        <textarea id="km-extra" rows="2" style="width:100%;border:1px solid rgba(232,160,0,0.4);border-radius:6px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:0.85rem;color:#1C1400;background:#FEFAF0;outline:none;resize:vertical;" placeholder="Bijzonderheden, bonussen, afmetingen, etc."></textarea>
+      </div>
+      <div class="taak-modal-field">
+        <label>Inbrenger</label>
+        <input id="km-inbrenger" type="text" placeholder="Naam van de inbrenger">
+      </div>
+      <div class="taak-modal-btns">
+        <button class="taak-modal-cancel" id="kavel-del-btn" onclick="verwijderKavel()" style="margin-right:auto;color:#C03030;border-color:rgba(192,48,48,0.35);display:none;">🗑 Verwijderen</button>
+        <button class="taak-modal-cancel" onclick="sluitKavelModal()">Annuleren</button>
+        <button class="taak-modal-save" onclick="slaanKavelOp()">Opslaan</button>
       </div>
     </div>
   </div>
