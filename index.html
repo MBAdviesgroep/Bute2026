@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -2303,6 +2304,1044 @@ footer {
   #tab-vrijwilligers .section-title { font-size: 14pt !important; margin-bottom: 8pt !important; }
 }
 h2.pdf-title, p.pdf-subtitle { display: none; }
+
+/* ════════════════════════════════════════════════════════════════
+   ✦ MAKE-OVER LAYER — refined design system on top of de basis
+   Behoudt alle bestaande klassen & functionaliteit; verfijnt alleen
+   typografie, ritme, kleur, diepte en finishing.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bute-gold: #E8A000;
+  --bute-gold-deep: #B57700;
+  --bute-gold-soft: #F5D38A;
+  --bute-ink: #1C1400;
+  --bute-ink-2: #3A2A05;
+  --bute-mute: #7A6030;
+  --bute-mute-2: #9A8050;
+  --bute-cream: #FBF6EA;
+  --bute-cream-2: #F4ECDA;
+  --bute-paper: #FFFCF5;
+  --bute-line: rgba(28,20,0,0.08);
+  --bute-line-strong: rgba(28,20,0,0.14);
+  --shadow-1: 0 1px 2px rgba(28,20,0,0.04), 0 1px 1px rgba(28,20,0,0.03);
+  --shadow-2: 0 8px 24px -8px rgba(60,40,0,0.10), 0 2px 6px rgba(60,40,0,0.04);
+  --shadow-3: 0 24px 60px -20px rgba(60,40,0,0.18), 0 4px 12px rgba(60,40,0,0.05);
+}
+
+/* Warmer base canvas met subtiele papier-textuur */
+body {
+  background:
+    radial-gradient(circle at 20% -10%, rgba(232,160,0,0.07), transparent 50%),
+    radial-gradient(circle at 110% 5%, rgba(232,160,0,0.05), transparent 45%),
+    #FBF6EA !important;
+  color: var(--bute-ink);
+  font-feature-settings: "ss01","cv11","kern";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── HERO — editorial, met merkstrook en betere logo-presentatie ── */
+.hero {
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 110%, rgba(255,255,255,0.18), transparent 60%),
+    linear-gradient(180deg, #F0AC10 0%, #E8A000 55%, #D89400 100%) !important;
+  padding: 64px 32px 56px !important;
+  border-bottom: 1px solid rgba(28,20,0,0.18);
+  position: relative;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(135deg, rgba(28,20,0,0.04) 0 1px, transparent 1px 14px);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+.hero::after {
+  background: radial-gradient(ellipse 70% 60% at 50% -20%, rgba(255,255,255,0.30) 0%, transparent 70%) !important;
+}
+.logo-corner {
+  width: 84px !important;
+  height: 84px !important;
+  top: 22px !important;
+  right: 26px !important;
+  border: 3px solid #FFF7DD;
+  box-shadow:
+    0 0 0 1px rgba(28,20,0,0.18),
+    0 8px 24px rgba(28,20,0,0.22),
+    inset 0 0 0 1px rgba(28,20,0,0.08) !important;
+}
+.hero-season {
+  font-size: 11px !important;
+  letter-spacing: 5px !important;
+  background: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(28,20,0,0.28) !important;
+  color: rgba(28,20,0,0.80) !important;
+  padding: 5px 18px !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 999px !important;
+  margin-bottom: 22px !important;
+}
+.hero h1 {
+  font-weight: 900 !important;
+  letter-spacing: -3px !important;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.18), 0 1px 0 rgba(28,20,0,0.06);
+  font-size: clamp(4rem, 11vw, 7.5rem) !important;
+}
+.hero h1::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 4px;
+  background: var(--bute-ink);
+  margin: 14px auto 6px;
+  border-radius: 2px;
+  opacity: 0.85;
+}
+.hero p {
+  font-size: 1.08rem !important;
+  color: rgba(28,20,0,0.78) !important;
+  font-weight: 500 !important;
+  max-width: 560px !important;
+  letter-spacing: 0.1px;
+}
+
+/* ── TABS — pill-rail met ink-fill actief, rust ── */
+.tabs-wrapper {
+  background: rgba(255,252,245,0.85) !important;
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  border-bottom: 1px solid var(--bute-line-strong) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 4px 18px -10px rgba(60,40,0,0.14) !important;
+  padding: 0 28px !important;
+}
+.tabs { gap: 2px !important; padding: 10px 0 !important; }
+.tab-btn {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--bute-mute) !important;
+  padding: 9px 16px !important;
+  border-radius: 999px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px !important;
+  transition: color .15s ease, background .15s ease, transform .15s ease !important;
+}
+.tab-btn:hover {
+  background: rgba(232,160,0,0.10) !important;
+  color: var(--bute-ink) !important;
+  border-color: transparent !important;
+}
+.tab-btn.active {
+  background: var(--bute-ink) !important;
+  color: #FFF3D2 !important;
+  border-color: var(--bute-ink) !important;
+  box-shadow: 0 4px 12px -4px rgba(28,20,0,0.45);
+}
+.sync-btn {
+  background: transparent !important;
+  border: 1px solid var(--bute-line-strong) !important;
+  color: var(--bute-mute) !important;
+  border-radius: 999px !important;
+  padding: 7px 14px !important;
+  font-size: 0.78rem !important;
+}
+.sync-btn:hover {
+  background: var(--bute-cream-2) !important;
+  border-color: var(--bute-gold) !important;
+  color: var(--bute-ink) !important;
+}
+
+/* online/gewijzigd-balk subtieler */
+#online-balk {
+  background: rgba(255,252,245,0.7) !important;
+  border-bottom: 1px solid var(--bute-line) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--bute-mute);
+}
+
+/* ── CONTENT WRAPPER ── */
+.content { padding: 48px 24px 80px !important; max-width: 1200px !important; }
+
+/* ── SECTION TITLES — display-formaat met rust ── */
+.section-title {
+  font-size: 2.6rem !important;
+  letter-spacing: -1.2px !important;
+  margin-bottom: 6px !important;
+  position: relative;
+  padding-left: 0;
+}
+.section-sub {
+  color: var(--bute-mute) !important;
+  font-size: 0.95rem !important;
+  margin-bottom: 36px !important;
+  max-width: 640px;
+  line-height: 1.5;
+}
+
+/* ── CARDS — algemene refresh: cream borders, ruim, zachte schaduw ── */
+.team-card,
+.budget-stat,
+.budget-box,
+.sponsor-package,
+.tel-add-box,
+.tel-table-wrap,
+.db-timeline-wrap,
+.taak-card {
+  border-color: var(--bute-line) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-1);
+  background: var(--bute-paper) !important;
+}
+.team-card { padding: 24px !important; }
+.team-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--shadow-2) !important;
+  border-color: rgba(232,160,0,0.45) !important;
+}
+.team-icon {
+  background: linear-gradient(135deg, #F2B12C, #D89400) !important;
+  width: 44px !important; height: 44px !important;
+  box-shadow: 0 4px 10px -2px rgba(232,160,0,0.5);
+}
+.team-name {
+  font-size: 1.3rem !important;
+  letter-spacing: -0.2px !important;
+}
+.team-lead {
+  font-size: 0.72rem !important;
+  letter-spacing: 1.4px !important;
+  text-transform: uppercase !important;
+  color: var(--bute-gold-deep) !important;
+  font-weight: 700 !important;
+}
+
+/* ── FILTERS / KLEINE KNOPPEN ── */
+.filter-btn,
+.db-view-btn,
+.dagdeel-snelknop {
+  background: var(--bute-paper) !important;
+  border: 1px solid var(--bute-line-strong) !important;
+  color: var(--bute-mute) !important;
+  border-radius: 999px !important;
+  padding: 6px 14px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px !important;
+  transition: all .12s ease !important;
+}
+.filter-btn:hover, .filter-btn.active,
+.db-view-btn.active,
+.dagdeel-snelknop:hover {
+  background: var(--bute-ink) !important;
+  color: #FFF3D2 !important;
+  border-color: var(--bute-ink) !important;
+}
+
+/* ── TAKEN ── */
+.taak-card {
+  padding: 16px 20px !important;
+  transition: border-color .15s, transform .15s, box-shadow .15s !important;
+}
+.taak-card:hover {
+  border-color: rgba(232,160,0,0.45) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2) !important;
+}
+.taak-card.done {
+  background: #F2FAF3 !important;
+  border-color: rgba(76,175,80,0.30) !important;
+}
+.taak-title {
+  font-size: 0.96rem !important;
+  letter-spacing: -0.1px;
+  color: var(--bute-ink) !important;
+}
+.check-btn {
+  border-color: rgba(28,20,0,0.18) !important;
+}
+.check-btn:hover { box-shadow: 0 0 0 4px rgba(76,175,80,0.10); }
+
+/* ── BADGES — rustiger ── */
+.badge {
+  font-size: 0.66rem !important;
+  letter-spacing: 0.6px !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  text-transform: uppercase;
+  font-weight: 700 !important;
+}
+.badge-team {
+  background: rgba(232,160,0,0.12) !important;
+  border-color: rgba(232,160,0,0.30) !important;
+  color: var(--bute-gold-deep) !important;
+}
+.badge-person {
+  background: var(--bute-cream-2) !important;
+  border-color: var(--bute-line) !important;
+  color: var(--bute-mute) !important;
+}
+
+/* ── BUDGET — editorial tabel ── */
+.budget-stat { padding: 22px 26px !important; text-align: left !important; }
+.budget-stat-label {
+  font-size: 0.66rem !important;
+  letter-spacing: 2px !important;
+  color: var(--bute-mute) !important;
+}
+.budget-stat-value {
+  font-size: 2.4rem !important;
+  letter-spacing: -1px !important;
+  margin-top: 4px;
+}
+.budget-box-header {
+  background: var(--bute-cream) !important;
+  border-bottom: 1px solid var(--bute-line) !important;
+  padding: 16px 22px !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  border-radius: 14px 14px 0 0 !important;
+}
+.budget-table td { padding: 11px 22px !important; font-size: 0.86rem !important; }
+.budget-table .cat-row td {
+  background: rgba(232,160,0,0.04) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 2.4px !important;
+  color: var(--bute-mute) !important;
+}
+.budget-input {
+  background: var(--bute-cream) !important;
+  border-color: var(--bute-line-strong) !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ── SPONSOR PAKKETTEN ── */
+.sponsor-package {
+  padding: 24px 22px !important;
+  text-align: left !important;
+  border-radius: 16px !important;
+  position: relative;
+  overflow: hidden;
+}
+.sponsor-package::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(232,160,0,0.5), transparent);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.sponsor-package:hover::before { opacity: 1; }
+.sponsor-package.featured {
+  background: linear-gradient(180deg, #FFF8E2, var(--bute-paper)) !important;
+  border-color: rgba(232,160,0,0.45) !important;
+}
+.sponsor-package.selected {
+  background: linear-gradient(180deg, #FFF1C9, #FFFBEC) !important;
+  box-shadow: 0 0 0 3px rgba(232,160,0,0.20), var(--shadow-2) !important;
+}
+.pkg-name {
+  font-size: 1.15rem !important;
+  letter-spacing: -0.2px !important;
+}
+.pkg-price {
+  font-size: 2rem !important;
+  letter-spacing: -1px !important;
+  color: var(--bute-ink) !important;
+  margin: 8px 0 6px !important;
+}
+.pkg-count {
+  border-radius: 999px !important;
+  padding: 3px 12px !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+/* Sponsor panel */
+.sponsor-panel {
+  border-radius: 16px !important;
+  border: 1px solid var(--bute-line-strong) !important;
+  box-shadow: var(--shadow-3);
+}
+.sponsor-panel-header {
+  background: linear-gradient(180deg, #F2B12C, #E29800) !important;
+  border-bottom: 1px solid rgba(28,20,0,0.18);
+}
+
+/* ── TELEFOON & DRAAIBOEK TABELLEN ── */
+.tel-add-box, .tel-table-wrap, .db-table-wrap {
+  border-radius: 16px !important;
+  background: var(--bute-paper) !important;
+}
+.tel-table thead tr,
+.db-table thead tr {
+  background: var(--bute-cream) !important;
+  border-bottom: 1px solid var(--bute-line-strong) !important;
+}
+.tel-table thead th,
+.db-table thead th {
+  font-size: 0.66rem !important;
+  letter-spacing: 1.8px !important;
+  color: var(--bute-mute) !important;
+  padding: 14px 18px !important;
+}
+.tel-table tbody tr:hover,
+.db-table tbody tr:hover { background: rgba(232,160,0,0.05) !important; }
+.tel-table td, .db-table td {
+  padding: 13px 18px !important;
+  font-size: 0.88rem;
+}
+.tel-nr-cell { color: var(--bute-gold-deep) !important; letter-spacing: 0.4px; }
+
+/* ── INPUTS — uniforme finishing ── */
+.tel-input,
+.sponsor-text-input,
+.add-taak-input,
+.taak-modal-field input,
+.taak-modal-field select,
+.taak-modal-field textarea,
+.login-custom input {
+  background: var(--bute-cream) !important;
+  border: 1px solid var(--bute-line-strong) !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  transition: border-color .15s, box-shadow .15s, background .15s !important;
+}
+.tel-input:focus,
+.sponsor-text-input:focus,
+.add-taak-input:focus,
+.taak-modal-field input:focus,
+.taak-modal-field select:focus,
+.taak-modal-field textarea:focus,
+.login-custom input:focus {
+  background: #fff !important;
+  border-color: var(--bute-gold) !important;
+  box-shadow: 0 0 0 4px rgba(232,160,0,0.15) !important;
+}
+
+/* ── PRIMAIRE KNOPPEN — ink-default met goud-accent variant ── */
+.tel-add-btn,
+.sponsor-add-btn,
+.add-taak-btn,
+.login-btn {
+  background: var(--bute-ink) !important;
+  color: #FFF3D2 !important;
+  border-radius: 8px !important;
+  padding: 10px 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.2px !important;
+  box-shadow: 0 4px 12px -4px rgba(28,20,0,0.4);
+  transition: transform .12s, box-shadow .12s, background .15s !important;
+  border: none !important;
+}
+.tel-add-btn:hover,
+.sponsor-add-btn:hover,
+.add-taak-btn:hover,
+.login-btn:hover {
+  background: #2C1F00 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -6px rgba(28,20,0,0.45);
+}
+
+/* ── LOGIN ── */
+#login-screen {
+  background: radial-gradient(ellipse at top, #F2B12C 0%, #C58200 70%) !important;
+}
+.login-box {
+  border-radius: 22px !important;
+  box-shadow: 0 30px 80px -20px rgba(28,20,0,0.45), 0 0 0 1px rgba(28,20,0,0.06) !important;
+  padding: 40px 36px 32px !important;
+  background: var(--bute-paper) !important;
+}
+.login-logo {
+  width: 72px !important;
+  height: 72px !important;
+  border: 3px solid #FFF7DD;
+  box-shadow: 0 0 0 1px rgba(28,20,0,0.15), 0 6px 18px rgba(28,20,0,0.18) !important;
+}
+.login-title {
+  font-size: 2.1rem !important;
+  letter-spacing: -1px !important;
+}
+.login-sub { color: var(--bute-mute) !important; }
+.login-label {
+  font-size: 0.66rem !important;
+  letter-spacing: 1.6px !important;
+}
+.login-member-btn {
+  background: var(--bute-cream) !important;
+  border: 1px solid var(--bute-line-strong) !important;
+  border-radius: 10px !important;
+  font-size: 0.82rem !important;
+  padding: 10px 8px !important;
+  transition: all .12s !important;
+}
+.login-member-btn:hover {
+  background: var(--bute-cream-2) !important;
+  border-color: var(--bute-gold) !important;
+  transform: translateY(-1px);
+}
+.login-member-btn.selected {
+  background: var(--bute-ink) !important;
+  border-color: var(--bute-ink) !important;
+  color: #FFF3D2 !important;
+}
+
+/* ── DASHBOARD STAT TILES (Start page) — als ze inline styles hebben ── */
+#dashboard-grid > * {
+  background: var(--bute-paper) !important;
+  border: 1px solid var(--bute-line) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-1);
+  transition: transform .15s, box-shadow .15s;
+}
+#dashboard-grid > *:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+
+/* ── START-PAGE OVERVIEW CARDS (inline-styled grid) — verfijnen ── */
+#tab-start > div > div[style*="grid"] > div {
+  background: var(--bute-paper) !important;
+  border: 1px solid var(--bute-line) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  box-shadow: var(--shadow-1);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
+}
+#tab-start > div > div[style*="grid"] > div:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+  border-color: rgba(232,160,0,0.4) !important;
+}
+
+/* ── PROGRESS BAR ── */
+.team-progress-fill {
+  background: linear-gradient(90deg, #F2B12C, var(--bute-gold-deep)) !important;
+}
+
+/* ── COUNTDOWN BAR ── */
+.db-countdown-bar,
+[class*="db-countdown"] {
+  border-radius: 16px;
+}
+
+/* ── SCROLLBAR (webkit) ── */
+*::-webkit-scrollbar { height: 10px; width: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(232,160,0,0.30);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--bute-gold); background-clip: padding-box; }
+
+/* ── SELECTION ── */
+::selection { background: rgba(232,160,0,0.35); color: var(--bute-ink); }
+
+/* ── PDF KNOP ── */
+.pdf-btn {
+  background: var(--bute-paper) !important;
+  border: 1px solid var(--bute-line-strong) !important;
+  color: var(--bute-mute) !important;
+  border-radius: 999px !important;
+  padding: 7px 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px;
+  transition: all .12s !important;
+}
+.pdf-btn:hover {
+  background: var(--bute-ink) !important;
+  border-color: var(--bute-ink) !important;
+  color: #FFF3D2 !important;
+}
+
+/* ── MOBILE TOUCH-UPS ── */
+@media (max-width: 600px) {
+  .hero { padding: 44px 18px 36px !important; }
+  .hero h1 { font-size: 3.4rem !important; letter-spacing: -2px !important; }
+  .logo-corner { width: 60px !important; height: 60px !important; top: 14px !important; right: 14px !important; }
+  .content { padding: 28px 14px 70px !important; }
+  .section-title { font-size: 1.9rem !important; letter-spacing: -0.6px !important; }
+  .tab-btn { padding: 8px 12px !important; font-size: 0.78rem !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LUXE POLISH LAAG — texturen, dividers, dashboard, toasts, etc.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* — Papier/linnen textuur op body — */
+body {
+  background-image:
+    radial-gradient(ellipse 1200px 600px at 50% -100px, rgba(232,160,0,0.08), transparent 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.05  0 0 0 0.025 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  background-attachment: fixed, fixed;
+}
+
+/* — Editorial sectie-divider met goud ornament — */
+.bute-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 36px auto 28px;
+  max-width: 480px;
+  color: #C47F00;
+  opacity: 0.85;
+}
+.bute-divider::before,
+.bute-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196,127,0,0.45), transparent);
+}
+.bute-divider svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* — Hover-lift op kaarten — */
+.team-card,
+.sponsor-pkg,
+.unassigned-box {
+  transition: transform .25s cubic-bezier(.2,.7,.3,1.2), box-shadow .25s ease, border-color .2s ease !important;
+}
+.team-card:hover,
+.sponsor-pkg:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -16px rgba(60,40,0,0.22), 0 4px 12px rgba(60,40,0,0.06) !important;
+  border-color: rgba(232,160,0,0.55) !important;
+}
+.start-card {
+  transition: transform .25s cubic-bezier(.2,.7,.3,1.2), box-shadow .25s ease, border-color .2s ease;
+}
+.start-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -16px rgba(60,40,0,0.22), 0 4px 12px rgba(60,40,0,0.06);
+  border-color: rgba(232,160,0,0.55) !important;
+}
+
+/* — Soepele tab-transitie — */
+.section.active {
+  animation: butePageFade .42s cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes butePageFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* — Lucide icon basis — */
+.lucide {
+  width: 1em;
+  height: 1em;
+  stroke-width: 1.75;
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: inline-block;
+  vertical-align: -0.15em;
+}
+.lucide-gold { color: #C47F00; }
+.lucide-lg { width: 22px; height: 22px; }
+.lucide-xl { width: 28px; height: 28px; }
+.tab-btn .lucide { vertical-align: -3px; margin-right: 4px; }
+
+/* — Toast-systeem — */
+#bute-toast-host {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  pointer-events: none;
+}
+.bute-toast {
+  pointer-events: auto;
+  background: #FFF7E1;
+  border: 1px solid rgba(196,127,0,0.35);
+  border-left: 3px solid #E8A000;
+  border-radius: 10px;
+  padding: 12px 16px 12px 14px;
+  box-shadow: 0 18px 40px -12px rgba(60,40,0,0.28), 0 4px 10px rgba(60,40,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: #1C1400;
+  min-width: 220px;
+  max-width: 360px;
+  animation: buteToastIn .35s cubic-bezier(.2,.8,.2,1) both;
+}
+.bute-toast.bute-toast-out { animation: buteToastOut .3s ease both; }
+.bute-toast.toast-success { border-left-color: #2E8B47; }
+.bute-toast.toast-success .lucide { color: #2E8B47; }
+.bute-toast.toast-error   { border-left-color: #C0392B; }
+.bute-toast.toast-error .lucide { color: #C0392B; }
+.bute-toast.toast-info    { border-left-color: #C47F00; }
+.bute-toast.toast-info .lucide { color: #C47F00; }
+@keyframes buteToastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes buteToastOut { to { opacity: 0; transform: translateX(40px); } }
+
+/* — Skeleton loaders — */
+.bute-skeleton {
+  background: linear-gradient(90deg, rgba(232,160,0,0.08) 0%, rgba(232,160,0,0.18) 50%, rgba(232,160,0,0.08) 100%);
+  background-size: 200% 100%;
+  animation: buteSkelPulse 1.4s ease-in-out infinite;
+  border-radius: 6px;
+  display: block;
+}
+@keyframes buteSkelPulse {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* — Dashboard cards — */
+.dash-card {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FCF6E5 100%);
+  border: 1px solid rgba(196,127,0,0.22);
+  border-radius: 14px;
+  padding: 16px 18px 14px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s cubic-bezier(.2,.7,.3,1.2), box-shadow .25s, border-color .2s;
+}
+.dash-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -14px rgba(60,40,0,0.22);
+  border-color: rgba(232,160,0,0.5);
+}
+.dash-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 100% 0%, rgba(232,160,0,0.15), transparent 60%);
+  pointer-events: none;
+}
+.dash-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(232,160,0,0.14);
+  color: #C47F00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  position: relative;
+}
+.dash-card-icon .lucide { width: 18px; height: 18px; stroke-width: 2; }
+.dash-card-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #9A8050;
+  margin-bottom: 4px;
+  position: relative;
+}
+.dash-card-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #1C1400;
+  line-height: 1;
+  letter-spacing: -.5px;
+  position: relative;
+}
+.dash-card-suffix { font-size: 0.78rem; color: #7A6030; margin-left: 4px; font-weight: 600; }
+.dash-card-sub { font-size: 0.72rem; color: #7A6030; margin-top: 6px; position: relative; }
+.dash-card-bar {
+  height: 4px;
+  background: rgba(232,160,0,0.14);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 10px;
+  position: relative;
+}
+.dash-card-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, #E8A000, #C47F00);
+  border-radius: 2px;
+  transition: width .6s cubic-bezier(.2,.7,.3,1);
+}
+
+/* — Countdown — */
+.bute-countdown {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(232,160,0,0.18);
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  position: relative;
+}
+.bute-countdown-unit { display: flex; flex-direction: column; align-items: flex-start; }
+.bute-countdown-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #FFF3D2;
+  line-height: 1;
+  letter-spacing: -.5px;
+}
+.bute-countdown-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: rgba(255,243,210,0.55);
+  margin-top: 5px;
+}
+
+/* — Team progress bar — */
+.team-progress-wrap {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(232,160,0,0.18);
+}
+.team-progress-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #7A6030;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.team-progress-pct {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.95rem;
+  color: #1C1400;
+}
+.team-progress-bar {
+  height: 5px;
+  background: rgba(232,160,0,0.14);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.team-progress-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, #E8A000, #C47F00);
+  border-radius: 3px;
+  transition: width .5s cubic-bezier(.2,.7,.3,1);
+}
+.team-progress-bar.complete > div {
+  background: linear-gradient(90deg, #2E8B47, #1E6B33);
+}
+
+/* — Mobile dashboard — */
+@media (max-width: 700px) {
+  #dashboard-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .bute-countdown { gap: 12px; }
+  .bute-countdown-num { font-size: 1.35rem; }
+}
+@media (max-width: 420px) {
+  #dashboard-grid { grid-template-columns: 1fr !important; }
+}
+
+/* — PDF Cover & Footer — */
+.pdf-cover { display: none; }
+@media print {
+  .pdf-cover {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 92vh;
+    page-break-after: always;
+    background: #FEFAF0 !important;
+    padding: 40pt 30pt;
+  }
+  .pdf-cover-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9pt !important;
+    font-weight: 700;
+    letter-spacing: 4pt;
+    text-transform: uppercase;
+    color: #C47F00 !important;
+    margin-bottom: 18pt;
+  }
+  .pdf-cover-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 56pt !important;
+    font-weight: 900;
+    color: #1C1400 !important;
+    letter-spacing: -2pt;
+    line-height: 0.92;
+    margin-bottom: 10pt;
+  }
+  .pdf-cover-section {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26pt !important;
+    font-weight: 700;
+    color: #C47F00 !important;
+    margin-bottom: 24pt;
+    letter-spacing: -0.3pt;
+  }
+  .pdf-cover-rule {
+    width: 80pt;
+    height: 2pt;
+    background: #E8A000 !important;
+    margin: 0 auto 24pt;
+  }
+  .pdf-cover-meta {
+    font-size: 10.5pt !important;
+    color: #5A4A20 !important;
+    line-height: 1.8;
+  }
+  .pdf-cover-meta strong { color: #1C1400 !important; font-weight: 700; }
+  .pdf-cover-foot {
+    margin-top: 40pt;
+    font-size: 8pt !important;
+    color: #9A8050 !important;
+    letter-spacing: 1.2pt;
+    text-transform: uppercase;
+  }
+  .pdf-runfoot {
+    position: fixed;
+    bottom: 6mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 7.5pt;
+    color: #9A8050 !important;
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  @page {
+    margin: 18mm 14mm 18mm;
+  }
+}
+.pdf-runfoot { display: none; }
+
+/* ───── CHAPTER INTRO ───── */
+#chapter-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FEFAF0;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease, visibility 0s linear .35s;
+}
+#chapter-intro.visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .25s ease, visibility 0s linear 0s;
+}
+#chapter-intro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 700px 360px at 50% 50%, rgba(232,160,0,0.18), transparent 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.05  0 0 0 0.04 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+}
+.chapter-content {
+  text-align: center;
+  position: relative;
+  padding: 0 30px;
+  transform: translateY(20px) scale(.96);
+  opacity: 0;
+  transition: opacity .5s cubic-bezier(.2,.7,.3,1), transform .5s cubic-bezier(.2,.7,.3,1);
+}
+#chapter-intro.visible .chapter-content {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.chapter-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #C47F00;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.chapter-eyebrow::before, .chapter-eyebrow::after {
+  content: "";
+  width: 60px;
+  height: 1px;
+}
+.chapter-eyebrow::before { background: linear-gradient(90deg, transparent, #C47F00); }
+.chapter-eyebrow::after  { background: linear-gradient(90deg, #C47F00, transparent); }
+.chapter-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 900;
+  line-height: .85;
+  letter-spacing: -3px;
+  color: #1C1400;
+  margin: 0;
+}
+.chapter-rule {
+  width: 70px;
+  height: 2px;
+  background: #E8A000;
+  margin: 20px auto 0;
+}
+.chapter-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #9A8050;
+  margin-top: 18px;
+  letter-spacing: 1.5px;
+}
+.chapter-loading {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 6px;
+  vertical-align: -1px;
+}
+.chapter-loading span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: #C47F00;
+  animation: chapDots 1s ease-in-out infinite;
+}
+.chapter-loading span:nth-child(2) { animation-delay: .15s; }
+.chapter-loading span:nth-child(3) { animation-delay: .3s; }
+@keyframes chapDots {
+  0%, 100% { opacity: .3; transform: translateY(0); }
+  50%      { opacity: 1;  transform: translateY(-3px); }
+}
+@media (max-width: 600px) {
+  .chapter-title { font-size: 4rem; letter-spacing: -1.5px; }
+  .chapter-eyebrow::before, .chapter-eyebrow::after { width: 32px; }
+}
+@media print {
+  #chapter-intro { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -2432,11 +3471,13 @@ h2.pdf-title, p.pdf-subtitle { display: none; }
       </div>
 
       <!-- Datum + locatie -->
-      <div style="background:#E8A000;border-radius:12px;padding:22px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <div style="font-size:2rem;">🎪</div>
-        <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:900;color:#1C1400;letter-spacing:-.3px;">15 – 17 mei 2026 · Bonte Belevenis, Texel</div>
-          <div style="font-size:0.85rem;color:rgba(28,20,0,0.7);margin-top:2px;">Lions Club Texel · Bute — Bonte Belevenis Texel Evenement</div>
+      <div style="background:linear-gradient(135deg,#1C1400 0%,#3A2A05 100%);border-radius:18px;padding:28px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;box-shadow:0 24px 60px -20px rgba(60,40,0,0.35),0 4px 12px rgba(60,40,0,0.08);position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(232,160,0,0.06) 0 1px,transparent 1px 16px);pointer-events:none;"></div>
+        <div style="font-size:2.4rem;position:relative;">🎪</div>
+        <div style="position:relative;flex:1;min-width:200px;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:#E8A000;margin-bottom:6px;">Save the date</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.4rem,4.5vw,1.9rem);font-weight:900;color:#FFF3D2;letter-spacing:-.6px;line-height:1.05;">15 – 17 mei 2026 · Bonte Belevenis, Texel</div>
+          <div style="font-size:0.86rem;color:rgba(255,243,210,0.65);margin-top:8px;letter-spacing:.1px;">Lions Club Texel · Bute — Bonte Belevenis Texel Evenement</div>
         </div>
       </div>
 
@@ -3683,23 +4724,21 @@ function verwerkData(data) {
     herbereken();
   }
   if (data.sponsors) {
+    // Hardcoded lijst is ALTIJD leidend. Cloud updates ALLEEN status + notitie per naam.
     Object.keys(data.sponsors).forEach(function(k) {
-      if (sponsorData[k]) {
-        var cloudEntries = data.sponsors[k] || [];
-        if (cloudEntries.length > 0) {
-          // Samenvoegen: cloud is leidend, maar voeg code-defaults toe die nog NIET in cloud zitten (op naam)
-          var cloudNamen = cloudEntries.map(function(e) { return (e.naam||'').trim().toLowerCase(); });
-          var codeDefaults = sponsorData[k].entries || [];
-          codeDefaults.forEach(function(d) {
-            if (cloudNamen.indexOf((d.naam||'').trim().toLowerCase()) === -1) {
-              cloudEntries.push(d);
-            }
-          });
-          sponsorData[k].entries = cloudEntries;
+      if (!sponsorData[k]) return;
+      var cloudMap = {};
+      (data.sponsors[k] || []).forEach(function(ce) {
+        cloudMap[(ce.naam||'').trim().toLowerCase()] = ce;
+      });
+      sponsorData[k].entries.forEach(function(de) {
+        var ce = cloudMap[(de.naam||'').trim().toLowerCase()];
+        if (ce) {
+          if (ce.status)  de.status  = ce.status;
+          if (ce.notitie !== undefined) de.notitie = ce.notitie;
         }
-        // Als cloud leeg is, blijven de code-defaults staan
-        updateCount(k);
-      }
+      });
+      updateCount(k);
     });
     renderSponsorTotals();
   }
@@ -3758,10 +4797,11 @@ function laadVanCloud() {
     herbereken();
     renderAlles();
     setStatus('\u2714 Gesynchroniseerd', 'ok');
+    // Direct terugschrijven zodat cloud-sponsoren worden opgeschoond naar de hardcoded lijst
+    slaOpMet('sponsors gesynchroniseerd');
   })
   .catch(function(e) {
     console.error(e);
-    // Probeer lokale backup te laden
     try {
       var backup = localStorage.getItem('bute2026_backup');
       if (backup) {
@@ -4840,6 +5880,8 @@ var sponsorData = {
     { naam: 'Jord Kuiken',                     contact: 'Jord Kuiken',              email: 'info@jordkuiken.nl',                 telefoon: '06 4195270',  status: 'afgesloten', notitie: '' },
     { naam: 'Assurantiekantoor Texel',         contact: 'Niels Jimmink',            email: 'Niels@aktexel.nl',                  telefoon: '0222 312 315', status: 'afgesloten', notitie: '' },
     { naam: 'Hanos',                           contact: 'Ronald Kleinveld',         email: 'rkleinveld@hanos.nl',               telefoon: '0222 312669', status: 'afgesloten', notitie: '' },
+    { naam: 'BK Investments (1)',              contact: 'Jeroen de Bruijn',         email: 'j.d.bruijn@continu.nl',             telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'BK Investments (2)',              contact: 'Jeroen de Bruijn',         email: 'j.d.bruijn@continu.nl',             telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Fa. Witte Wezenspyk',             contact: 'Job Witte',                email: 'info@wezenspyk.nl',                 telefoon: '06 81078993', status: 'afgesloten', notitie: '' },
     { naam: 'Bouw2020',                        contact: 'Arie Bruin',               email: 'info@bouw2020.nl',                  telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Bouwbedrijf Texel',               contact: 'Willem Houwing',           email: 'Willemhouwing@gmail.com',            telefoon: '', status: 'afgesloten', notitie: '' },
@@ -4869,7 +5911,6 @@ var sponsorData = {
     { naam: 'ABH Stukadoors',                  contact: 'Jan Velthuis',             email: 'info@abh-stukadoors.nl',            telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Assurantiekantoor Bremer',        contact: 'Ineke Bremer',             email: 'info@bremer-texel.nl',              telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Beeloud BV',                      contact: 'Sven Schagen',             email: 'Info@beeloud.nl',                   telefoon: '', status: 'afgesloten', notitie: '' },
-    { naam: 'BK Investments',                  contact: 'Jeroen de Bruijn',         email: 'j.d.bruijn@continu.nl',            telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Bosma slapen en Meer',            contact: 'Menno Bosma',              email: 'info@bosmaslaapen.nl',              telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Café Restaurant De Slufter',      contact: 'H. van der Star',          email: 'info@deslufter.nl',                 telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Camping Coogherveld Texel',       contact: 'Marjan van de Reijken',    email: 'info@coogherveld.nl',               telefoon: '', status: 'afgesloten', notitie: '' },
@@ -4968,7 +6009,9 @@ function renderSponsorTotals() {
     var n        = actief.length;
     var nTotaal  = pkg.entries.length;
     var nBezig   = pkg.entries.filter(function(e) { return e.status !== 'afgewezen' && e.status !== 'afgesloten'; }).length;
-    var subtotaal = n * pkg.prijs;
+    var subtotaal = actief.reduce(function(sum, e) {
+      return sum + pkg.prijs;
+    }, 0);
     grand += subtotaal;
     var afgewezenTekst = '';
     if (nBezig > 0) afgewezenTekst += ' <span style="color:#C47F00;font-size:0.68rem;">(' + nBezig + ' lopend)</span>';
@@ -6536,5 +7579,525 @@ function verwijderKavel() {
       </div>
     </div>
   </div>
+<!-- ═══════════════════════════════════════════════════════════════
+     LUXE POLISH SCRIPT — icons, dashboard, countdown, toasts, PDF
+     ═══════════════════════════════════════════════════════════════ -->
+
+<!-- Toast host -->
+<div id="bute-toast-host" aria-live="polite"></div>
+
+<!-- Chapter intro overlay -->
+<div id="chapter-intro" aria-hidden="true">
+  <div class="chapter-content">
+    <div class="chapter-eyebrow">BUTE 2026</div>
+    <h1 class="chapter-title" id="chapter-title">PROJECTPLAN</h1>
+    <div class="chapter-rule"></div>
+    <div class="chapter-num" id="chapter-num">Hoofdstuk 01</div>
+  </div>
+</div>
+
+<!-- PDF cover & running footer (alleen zichtbaar tijdens print) -->
+<div class="pdf-cover" id="pdf-cover">
+  <div class="pdf-cover-eyebrow">Lions Club Texel · Intern document</div>
+  <div class="pdf-cover-title">BUTE 2026</div>
+  <div class="pdf-cover-section" id="pdf-cover-section">Projectplan</div>
+  <div class="pdf-cover-rule"></div>
+  <div class="pdf-cover-meta">
+    <strong>Bonte Belevenis Texel Evenement</strong><br>
+    15 – 17 mei 2026 · Texel
+  </div>
+  <div class="pdf-cover-foot" id="pdf-cover-foot">Gegenereerd op —</div>
+</div>
+<div class="pdf-runfoot" id="pdf-runfoot">BUTE 2026 · Lions Club Texel · — </div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── 1. LUCIDE ICON LIBRARY ─────────────────────────────── */
+  var ICONS = {
+    home:        '<path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/><path d="M10 21v-6h4v6"/>',
+    tag:         '<path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5"/>',
+    check:       '<path d="M20 6 9 17l-5-5"/>',
+    euro:        '<path d="M19 5a8 8 0 1 0 0 14"/><path d="M3 10h12"/><path d="M3 14h12"/>',
+    handshake:   '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+    users:       '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    clipboard:   '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h4"/>',
+    phone:       '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    gavel:       '<path d="m14.5 8.5 6 6"/><path d="m11.5 5.5 6 6"/><path d="m17.5 11.5 3-3"/><path d="m8.5 11.5 6 6"/><path d="M5.5 14.5 10 10l4.5 4.5L10 19z"/><path d="M2 22h12"/>',
+    calendar:    '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+    download:    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+    inbox:       '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+    alert:       '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    trending:    '<path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',
+    party:       '<path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-1.99-.11a2.9 2.9 0 0 0-3.13 1.96c-.27.93-1.16 1.45-2.05 1.34l-.4-.07c-.84-.15-1.66.42-1.86 1.25l-.45 1.84"/><path d="m6 8 2 2"/><circle cx="11" cy="11" r="2"/>',
+    refresh:     '<path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>',
+    settings:    '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+    plus:        '<path d="M12 5v14"/><path d="M5 12h14"/>',
+    sortAsc:     '<path d="m3 8 4-4 4 4"/><path d="M7 4v16"/><path d="M11 12h4"/><path d="M11 16h7"/><path d="M11 20h10"/>',
+    chart:       '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+    save:        '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/>',
+    sparkles:    '<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>'
+  };
+  function icon(name, cls) {
+    var p = ICONS[name];
+    if (!p) return '';
+    var c = 'lucide ' + (cls || '');
+    return '<svg class="' + c + '" viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg>';
+  }
+  window.buteIcon = icon;
+
+  /* ── 2. EMOJI → ICON SUBSTITUTIE ─────────────────────────── */
+  // Mapping: emoji → lucide icon name
+  var EMOJI_MAP = {
+    '🏠': 'home', '🏷': 'tag', '✅': 'check', '💶': 'euro', '🤝': 'handshake',
+    '🙋': 'users', '📋': 'clipboard', '📞': 'phone', '🔨': 'gavel', '📅': 'calendar',
+    '⬇': 'download', '📥': 'inbox', '⚠': 'alert', '📊': 'chart', '🎪': 'party',
+    '↻': 'refresh', '⚙': 'settings', '➕': 'plus', '↑': 'sortAsc', '✨': 'sparkles'
+  };
+  // Replace leading emoji in a single text node with an SVG span
+  function replaceLeadingEmoji(textNode) {
+    var t = textNode.nodeValue;
+    if (!t) return false;
+    // try first char(s) — emoji can be 1 or 2 code units
+    var first2 = t.substring(0, 2);
+    var first1 = t.substring(0, 1);
+    var key = null, len = 0;
+    if (EMOJI_MAP[first2]) { key = first2; len = 2; }
+    else if (EMOJI_MAP[first1]) { key = first1; len = 1; }
+    else return false;
+    var span = document.createElement('span');
+    span.className = 'bute-icon-wrap';
+    span.innerHTML = icon(EMOJI_MAP[key]);
+    textNode.parentNode.insertBefore(span, textNode);
+    textNode.nodeValue = t.substring(len);
+    return true;
+  }
+  // Walk DOM and replace leading emojis in elements that are likely UI labels
+  function replaceEmojisIn(root) {
+    if (!root) return;
+    // Targeted selectors waar emoji's voorkomen
+    var sels = [
+      '.tab-btn', '.pdf-btn', '.filter-btn', '.tel-add-btn',
+      '.add-taak-btn', '.unassigned-title', '.sync-btn',
+      '.panel-close', '.budget-add-cat-btn', '.budget-add-row-btn',
+      '.team-naam', '.team-icon', '.team-leader-label',
+      '.werkplek-naam', '.dagdeel-label', '.dagdeel-tab',
+      '.db-fase-row', '.db-time', '#sort-bar span', '.section-title'
+    ];
+    var nodes = root.querySelectorAll(sels.join(','));
+    nodes.forEach(function(el) {
+      // walk first text child only
+      for (var i = 0; i < el.childNodes.length; i++) {
+        var c = el.childNodes[i];
+        if (c.nodeType === 3) { // text
+          if (replaceLeadingEmoji(c)) break;
+        } else if (c.nodeType === 1) {
+          // already an element — skip
+          break;
+        }
+      }
+    });
+  }
+
+  /* ── 3. TOAST ─────────────────────────────────────────────── */
+  function toast(msg, type, opts) {
+    type = type || 'info';
+    opts = opts || {};
+    var host = document.getElementById('bute-toast-host');
+    if (!host) return;
+    var el = document.createElement('div');
+    el.className = 'bute-toast toast-' + type;
+    var iconName = type === 'success' ? 'check' : type === 'error' ? 'alert' : 'sparkles';
+    el.innerHTML = icon(iconName, 'lucide-lg') + '<div>' + msg + '</div>';
+    host.appendChild(el);
+    var dur = opts.duration || 2800;
+    setTimeout(function() {
+      el.classList.add('bute-toast-out');
+      setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 350);
+    }, dur);
+  }
+  window.buteToast = toast;
+
+  /* ── 4. DASHBOARD + COUNTDOWN ─────────────────────────────── */
+  var EVENT_DATE = new Date('2026-05-15T00:00:00');
+
+  function tellingTaken() {
+    var t = (window.taken || []);
+    var ds = window.doneState || {};
+    var totaal = 0, klaar = 0;
+    t.forEach(function(taak, idx) {
+      if (!taak || !taak.actie) return;
+      totaal++;
+      if (ds[idx]) klaar++;
+    });
+    return { totaal: totaal, klaar: klaar, open: totaal - klaar };
+  }
+  function tellingBegroting() {
+    // Read kosten + baten from DOM
+    var rows = document.querySelectorAll('.budget-input:not([data-vj-key])');
+    var kosten = 0, baten = 0;
+    rows.forEach(function(el) {
+      var tr = el.closest('tr');
+      if (!tr) return;
+      var v = parseFloat((el.value || '').replace(/[^\d.,-]/g, '').replace(',', '.')) || 0;
+      var tbl = el.closest('table');
+      if (!tbl) return;
+      if (tbl.id === 'budget-kosten' || (tbl.id || '').indexOf('kosten') >= 0) kosten += v;
+      else if (tbl.id === 'budget-baten' || (tbl.id || '').indexOf('baten') >= 0) baten += v;
+    });
+    return { kosten: kosten, baten: baten };
+  }
+  function tellingSponsoren() {
+    var sd = window.sponsorData || {};
+    var aantal = 0, totaal = 0;
+    Object.keys(sd).forEach(function(k) {
+      var pkg = sd[k] || {};
+      var entries = pkg.entries || [];
+      var prijs = +pkg.prijs || 0;
+      var actief = entries.filter(function(e) { return e && e.status === 'afgesloten'; });
+      aantal += actief.length;
+      totaal += actief.length * prijs;
+    });
+    var nat = (window.naturaSponsor || []) || [];
+    aantal += nat.length;
+    return { aantal: aantal, totaal: totaal };
+  }
+  function tellingVrijwilligers() {
+    var v = window.vrijwilligers || [];
+    return { aantal: v.length };
+  }
+
+  function fmtEuro(n) {
+    return '€ ' + Math.round(n).toLocaleString('nl-NL');
+  }
+
+  function renderCountdown() {
+    var now = new Date();
+    var ms = EVENT_DATE - now;
+    if (ms < 0) return '<div class="bute-countdown"><div class="bute-countdown-unit"><span class="bute-countdown-num">🎉</span><span class="bute-countdown-lbl">Het is zover!</span></div></div>';
+    var totalSec = Math.floor(ms / 1000);
+    var dagen = Math.floor(totalSec / 86400);
+    var uren = Math.floor((totalSec % 86400) / 3600);
+    var min  = Math.floor((totalSec % 3600) / 60);
+    var weken = Math.floor(dagen / 7);
+    var html = '<div class="bute-countdown">' +
+      '<div class="bute-countdown-unit"><span class="bute-countdown-num">' + dagen + '</span><span class="bute-countdown-lbl">Dagen</span></div>' +
+      '<div class="bute-countdown-unit"><span class="bute-countdown-num">' + weken + '</span><span class="bute-countdown-lbl">Weken</span></div>' +
+      '<div class="bute-countdown-unit"><span class="bute-countdown-num">' + uren + '</span><span class="bute-countdown-lbl">Uren</span></div>' +
+      '<div class="bute-countdown-unit"><span class="bute-countdown-num">' + min + '</span><span class="bute-countdown-lbl">Min.</span></div>' +
+    '</div>';
+    return html;
+  }
+
+  function renderDashboard() {
+    var grid = document.getElementById('dashboard-grid');
+    if (!grid) return;
+    var t = tellingTaken();
+    var b = tellingBegroting();
+    var s = tellingSponsoren();
+    var v = tellingVrijwilligers();
+    var pct = t.totaal > 0 ? Math.round((t.klaar / t.totaal) * 100) : 0;
+    var saldoBaten = b.baten || 0;
+    var saldoKosten = b.kosten || 0;
+    var saldo = saldoBaten - saldoKosten;
+    var saldoPct = saldoKosten > 0 ? Math.min(100, Math.round((saldoBaten / saldoKosten) * 100)) : 0;
+
+    var cards = [
+      {
+        ic: 'check',
+        label: 'Taken voltooid',
+        value: t.klaar,
+        suffix: '/ ' + t.totaal,
+        sub: t.open + ' nog open',
+        bar: pct
+      },
+      {
+        ic: 'euro',
+        label: 'Begroting · saldo',
+        value: fmtEuro(saldo).replace('€ ', ''),
+        suffix: '€',
+        sub: fmtEuro(saldoBaten) + ' baten · ' + fmtEuro(saldoKosten) + ' kosten',
+        bar: saldoPct
+      },
+      {
+        ic: 'handshake',
+        label: 'Sponsoren',
+        value: s.aantal,
+        suffix: '',
+        sub: 'samen ' + fmtEuro(s.totaal),
+        bar: null
+      },
+      {
+        ic: 'users',
+        label: 'Vrijwilligers',
+        value: v.aantal,
+        suffix: '',
+        sub: 'aangemeld voor BUTE',
+        bar: null
+      }
+    ];
+
+    grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+    grid.innerHTML = cards.map(function(c) {
+      return '<div class="dash-card">' +
+        '<div class="dash-card-icon">' + icon(c.ic) + '</div>' +
+        '<div class="dash-card-label">' + c.label + '</div>' +
+        '<div class="dash-card-value">' + c.value + (c.suffix ? '<span class="dash-card-suffix">' + c.suffix + '</span>' : '') + '</div>' +
+        '<div class="dash-card-sub">' + c.sub + '</div>' +
+        (c.bar !== null ? '<div class="dash-card-bar"><div style="width:' + Math.min(100, Math.max(0, c.bar)) + '%"></div></div>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  function renderCountdownSlot() {
+    // append countdown to existing "Save the date" strip
+    var strip = document.querySelector('#tab-start [style*="Save the date"]');
+    // Find the date strip another way: it has the linear-gradient #1C1400
+    var strips = document.querySelectorAll('#tab-start > div > div');
+    var target = null;
+    strips.forEach(function(d) {
+      var s = d.getAttribute('style') || '';
+      if (s.indexOf('1C1400') >= 0 && s.indexOf('linear-gradient') >= 0) target = d;
+    });
+    if (!target) return;
+    var inner = target.querySelector('div[style*="position:relative"][style*="flex:1"]');
+    if (!inner) return;
+    var existing = inner.querySelector('.bute-countdown');
+    if (existing) existing.outerHTML = renderCountdown();
+    else inner.insertAdjacentHTML('beforeend', renderCountdown());
+  }
+
+  /* ── 5. TEAM PROGRESS BARS ─────────────────────────────── */
+  function renderTeamProgress() {
+    var cards = document.querySelectorAll('.team-card');
+    if (!cards.length) return;
+    var ds = window.doneState || {};
+    var allTaken = window.taken || [];
+    cards.forEach(function(card) {
+      var team = card.getAttribute('data-team') || (card.querySelector('.team-naam') && card.querySelector('.team-naam').textContent.trim());
+      if (!team) return;
+      var teamTaken = allTaken.filter(function(t) { return t && t.team === team; });
+      if (!teamTaken.length) {
+        var ex = card.querySelector('.team-progress-wrap');
+        if (ex) ex.remove();
+        return;
+      }
+      var totaal = teamTaken.length;
+      var klaar = teamTaken.filter(function(t) { return ds[allTaken.indexOf(t)]; }).length;
+      var pct = totaal > 0 ? Math.round((klaar / totaal) * 100) : 0;
+      var html =
+        '<div class="team-progress-row">' +
+          '<span>Voortgang</span>' +
+          '<span class="team-progress-pct">' + klaar + ' / ' + totaal + ' · ' + pct + '%</span>' +
+        '</div>' +
+        '<div class="team-progress-bar' + (pct === 100 ? ' complete' : '') + '"><div style="width:' + pct + '%"></div></div>';
+      var wrap = card.querySelector('.team-progress-wrap');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.className = 'team-progress-wrap';
+        card.appendChild(wrap);
+      }
+      wrap.innerHTML = html;
+    });
+  }
+
+  /* ── 6. CHAPTER INTRO ────────────────────────────────── */
+  var CHAPTER_DATA = {
+    'start':        { num: '01', title: 'PROJECTPLAN',  sub: 'Welkom & overzicht' },
+    'teams':        { num: '02', title: 'TEAMS',        sub: 'Verantwoordelijkheden & teamleiders' },
+    'takenlijst':   { num: '03', title: 'TAKEN',        sub: 'Volledige takenlijst' },
+    'begroting':    { num: '04', title: 'BEGROTING',    sub: 'Kosten · baten · saldo' },
+    'sponsoren':    { num: '05', title: 'SPONSOREN',    sub: 'Pakketten en partners' },
+    'vrijwilligers':{ num: '06', title: 'VRIJWILLIGERS',sub: 'Aanmeldingen & indeling' },
+    'draaiboek':    { num: '07', title: 'DRAAIBOEK',    sub: '15 – 17 mei 2026 minuut voor minuut' },
+    'telefoon':     { num: '08', title: 'TELEFOON',     sub: 'Belangrijke contacten' },
+    'veilingkavels':{ num: '09', title: 'VEILINGKAVELS',sub: 'Kavels en opbrengsten' }
+  };
+  var lastChapterAt = 0;
+  var chapterTimer = null;
+
+  // Track loading state from existing setStatus
+  window._buteIsLoading = false;
+  if (typeof window.setStatus === 'function') {
+    var _origStatusForLoad = window.setStatus;
+    window.setStatus = function(tekst, type) {
+      window._buteIsLoading = (type === 'laden');
+      return _origStatusForLoad.apply(this, arguments);
+    };
+  }
+
+  function showChapter(tabKey) {
+    var data = CHAPTER_DATA[tabKey];
+    if (!data) return;
+    var overlay = document.getElementById('chapter-intro');
+    var titleEl = document.getElementById('chapter-title');
+    var numEl   = document.getElementById('chapter-num');
+    if (!overlay || !titleEl || !numEl) return;
+
+    if (chapterTimer) { clearTimeout(chapterTimer); chapterTimer = null; }
+
+    var now = Date.now();
+    var sinceLast = now - lastChapterAt;
+    // Korter bij snelle herhaling, lange bij eerste keer
+    var minDuration = sinceLast < 4000 ? 600 : 1200;
+    var maxDuration = 2500;
+
+    titleEl.textContent = data.title;
+    numEl.innerHTML = 'Hoofdstuk ' + data.num + ' · ' + data.sub;
+    overlay.classList.add('visible');
+    lastChapterAt = now;
+
+    var start = now;
+    function checkClose() {
+      var elapsed = Date.now() - start;
+      if (elapsed >= maxDuration) { close(); return; }
+      if (elapsed >= minDuration && !window._buteIsLoading) { close(); return; }
+      if (elapsed >= minDuration && window._buteIsLoading) {
+        // toon loading dots
+        if (numEl.innerHTML.indexOf('chapter-loading') < 0) {
+          numEl.innerHTML += '<span class="chapter-loading"><span></span><span></span><span></span></span>';
+        }
+      }
+      chapterTimer = setTimeout(checkClose, 80);
+    }
+    function close() {
+      overlay.classList.remove('visible');
+      chapterTimer = null;
+    }
+    chapterTimer = setTimeout(checkClose, minDuration);
+  }
+
+  // (Chapter intro disabled — niet functioneel)
+
+  /* ── 7. PDF COVER & FOOTER ──────────────────────────────── */
+  var SECTION_TITLES = {
+    'tab-start': 'Projectplan',
+    'tab-teams': 'Teams & Taken',
+    'tab-takenlijst': 'Volledige Takenlijst',
+    'tab-begroting': 'Begroting',
+    'tab-sponsoren': 'Sponsoren',
+    'tab-vrijwilligers': 'Vrijwilligers',
+    'tab-draaiboek': 'Draaiboek',
+    'tab-telefoon': 'Telefoonnummers',
+    'tab-veilingkavels': 'Veilingkavels'
+  };
+  function fmtNlDatum() {
+    var d = new Date();
+    var maand = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+    return d.getDate() + ' ' + maand[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function preparePdfCover(tabId) {
+    var sec = document.getElementById('pdf-cover-section');
+    var foot = document.getElementById('pdf-cover-foot');
+    var rfoot = document.getElementById('pdf-runfoot');
+    var datum = fmtNlDatum();
+    if (sec) sec.textContent = SECTION_TITLES[tabId] || 'Projectplan';
+    if (foot) foot.textContent = 'Gegenereerd op ' + datum;
+    if (rfoot) rfoot.textContent = 'BUTE 2026 · Lions Club Texel · ' + (SECTION_TITLES[tabId] || '') + ' · ' + datum;
+  }
+  // Wrap the existing printTab function
+  if (typeof window.printTab === 'function') {
+    var _origPrintTab = window.printTab;
+    window.printTab = function(tabId) {
+      preparePdfCover(tabId);
+      return _origPrintTab.apply(this, arguments);
+    };
+  }
+  if (typeof window.printAlleDagen === 'function') {
+    var _origPrintAlle = window.printAlleDagen;
+    window.printAlleDagen = function() {
+      preparePdfCover('tab-draaiboek');
+      var sec = document.getElementById('pdf-cover-section');
+      if (sec) sec.textContent = 'Draaiboek · alle dagen';
+      return _origPrintAlle.apply(this, arguments);
+    };
+  }
+
+  /* ── 8. WIRE UP TO SAVE INDICATOR (toasts) ─────────────── */
+  // Watch the existing setStatus indicator and emit toasts
+  if (typeof window.setStatus === 'function') {
+    var _origStatus = window.setStatus;
+    var _lastToast = 0;
+    window.setStatus = function(tekst, type) {
+      var r = _origStatus.apply(this, arguments);
+      var now = Date.now();
+      if (now - _lastToast < 800) return r; // throttle
+      _lastToast = now;
+      if (type === 'fout') toast(tekst || 'Fout bij opslaan', 'error');
+      else if (type !== 'laden' && tekst && /opgeslagen|saved/i.test(tekst)) {
+        // silent — no toast for routine saves to avoid spam
+      }
+      return r;
+    };
+  }
+
+  /* ── 9. RENDER LOOP & HOOKS ─────────────────────────────── */
+  var pendingRender = null;
+  function scheduleRender() {
+    if (pendingRender) return;
+    pendingRender = requestAnimationFrame(function() {
+      pendingRender = null;
+      try { renderDashboard(); } catch(e) {}
+      try { renderTeamProgress(); } catch(e) {}
+      try { renderCountdownSlot(); } catch(e) {}
+      try { replaceEmojisIn(document); } catch(e) {}
+    });
+  }
+
+  // Hook DOM mutations (cheap throttle)
+  var mo = new MutationObserver(function(muts) {
+    var trigger = false;
+    for (var i = 0; i < muts.length; i++) {
+      var m = muts[i];
+      if (m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length)) trigger = true;
+      if (trigger) break;
+    }
+    if (trigger) scheduleRender();
+  });
+
+  function init() {
+    // Initial icon swap + render
+    replaceEmojisIn(document);
+    renderDashboard();
+    renderCountdownSlot();
+    renderTeamProgress();
+
+    // Observe content for changes
+    var content = document.querySelector('.tabs-wrapper') ? document.body : document.body;
+    mo.observe(content, { childList: true, subtree: true, characterData: false, attributes: false });
+
+    // Listen on input changes (for begroting)
+    document.addEventListener('input', function(e) {
+      if (e.target && (e.target.classList.contains('budget-input') || e.target.classList.contains('budget-name-input'))) {
+        scheduleRender();
+      }
+    });
+
+    // Refresh countdown every minute
+    setInterval(function() { try { renderCountdownSlot(); } catch(e) {} }, 60000);
+
+    // Welcome toast (only if not seen recently)
+    try {
+      var key = 'bute-welkom-' + new Date().toDateString();
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        setTimeout(function() {
+          var login = document.getElementById('login-screen');
+          if (login && login.style.display !== 'none') return;
+          // skip if login still visible
+        }, 1200);
+      }
+    } catch(e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
 </body>
 </html>
