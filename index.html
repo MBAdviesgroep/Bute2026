@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -6195,9 +6194,49 @@ function hernoemWerkplek(i, nieuweNaam) {
 }
 
 var vrijwilligers = [
-  { naam: 'Suzanne Reijnders', plek: 'Kinderactiviteiten', dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
-  { naam: 'Titia Klok',        plek: 'Kinderactiviteiten', dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
-  { naam: 'Ilse Bonne',        plek: 'Kinderactiviteiten', dagen: ['Zaterdagochtend','Zaterdagmiddag'] }
+  // Lions – alle 3 dagen aanwezig (vrijdag + zaterdag + zondag)
+  { naam: 'Maarten-Jeroen den Boer', plek: '',                    dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Kees Dros',               plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Jan Bot',                 plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Andrew Albers',           plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Willem van Tatenhove',    plek: 'Veiling',             dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Joop Groen',              plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Ben Rentenaar',           plek: 'Veiling',             dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Paul Krugers',            plek: 'Podium & Geluid',     dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Arie Bruin',              plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Morten Eschweiler',       plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+
+  // Lions – vrijdag + zaterdag (geen zondag)
+  { naam: 'Rodny Stolk',             plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend'] },
+  { naam: 'Paul Rutte',              plek: 'Podium & Geluid',     dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Job Witte',               plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend'] },
+  { naam: 'Ewout Riteco',            plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag'] },
+
+  // Lions – alleen vrijdag
+  { naam: 'Daniel Bonne',            plek: '',                    dagen: ['Vrijdagochtend','Vrijdagmiddag'] },
+
+  // Lions – alleen zaterdag
+  { naam: 'Pierre Bonnet',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Jeroen van Hattum',       plek: '',                    dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Peerke Reijnders',        plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Jan Klok',                plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+
+  // Tiger (partners/familieleden Lions) – zaterdag
+  { naam: 'Titia Klok',              plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Suzanne Reijnders',       plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Ilse Bonne',              plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Elze Albers',             plek: 'Ingang / Kassa',      dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Ina Pool',                plek: 'Ingang / Kassa',      dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Josephine Witte',         plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
+  { naam: 'Astrid van der Vis',      plek: 'Marktkramen',         dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+
+  // Vrijwilligers (extern) – zaterdag ochtend
+  { naam: 'Luc Reijnders',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
+  { naam: 'Juup Biesboer',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
+  { naam: 'Rick de Smidt',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
+  { naam: 'Robin Boerhorst',         plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
+  { naam: 'Floor den Boer',          plek: 'Marktkramen',         dagen: ['Zaterdagochtend','Zaterdagmiddag'] }
 ];
 var vrijwDragSrc = null;
 
