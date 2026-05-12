@@ -4053,20 +4053,37 @@ body {
 
   <!-- VEILINGKAVELS -->
   <div id="tab-veilingkavels" class="section">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;">
+    <h2 class="pdf-title">Kavellijst 2026</h2>
+    <p class="pdf-subtitle">Lions Fair Bute · Overzicht van alle kavels</p>
+    <div class="kavel-print-header">
+      <div class="kavel-print-logo" aria-hidden="true">
+        <svg viewBox="0 0 220 130" width="110" height="65" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="212" height="122" rx="14" fill="#9FB7C7" stroke="#2c2c2c" stroke-width="3"/>
+          <rect x="4" y="86" width="212" height="40" rx="0" fill="#6FA64B"/>
+          <circle cx="110" cy="86" r="42" fill="#F1A93A"/>
+          <rect x="58" y="58" width="104" height="36" fill="#1C1400"/>
+          <text x="110" y="86" text-anchor="middle" font-family="Barlow Condensed, Arial Black, sans-serif" font-weight="900" font-size="30" fill="#F1A93A" letter-spacing="2">BUTE</text>
+          <text x="110" y="104" text-anchor="middle" font-family="Barlow Condensed, Arial, sans-serif" font-weight="700" font-size="8" fill="#1C1400" letter-spacing="2">LIONS FAIR</text>
+        </svg>
+      </div>
+      <div class="kavel-print-title">Kavellijst 2026</div>
+      <div class="kavel-print-sub">Overzicht van alle kavels</div>
+    </div>
+    <div class="kavel-screen-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;">
       <div>
         <div class="section-title">🔨 Veilingkavels</div>
-        <p class="section-sub">Beheer alle kavels voor de Lions-veiling. Totaal: <span id="kavel-count" style="font-weight:700;color:#E8A000;">0</span> / 25 kavels</p>
+        <p class="section-sub">Beheer alle kavels voor de Lions-veiling. Totaal: <span id="kavel-count" style="font-weight:700;color:#E8A000;">0</span> / 31 kavels</p>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="tel-add-btn" onclick="openKavelModal(-1)" style="display:flex;align-items:center;gap:6px;">➕ Kavel toevoegen</button>
+        <button class="tel-add-btn" onclick="resetKavelsNaarStandaard()" style="display:flex;align-items:center;gap:6px;background:#FEFAF0;color:#7A5A10;border:1px solid rgba(232,160,0,0.45);" title="Vervangt alle kavels door de standaard 31 kavels uit de PDF">↺ Reset naar standaardlijst</button>
         <button class="pdf-btn" onclick="printTab('tab-veilingkavels')">⬇ PDF</button>
       </div>
     </div>
     <div style="background:#fff;border:1px solid rgba(232,160,0,0.28);border-radius:10px;padding:14px 18px;margin-bottom:20px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <span style="font-size:0.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#7A6030;">📊 Voortgang kavels</span>
-        <span id="kavel-pct" style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;color:#1C1400;">0 / 25</span>
+        <span id="kavel-pct" style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;color:#1C1400;">0 / 31</span>
       </div>
       <div style="height:8px;background:rgba(232,160,0,0.15);border-radius:4px;overflow:hidden;">
         <div id="kavel-progress-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#9B59B6,#7D3C98);border-radius:4px;transition:width .4s;"></div>
@@ -4076,23 +4093,216 @@ body {
         <span id="kavel-stat-biedingen" style="font-size:0.72rem;color:#9A8050;"></span>
       </div>
     </div>
-    <div class="tel-table-wrap">
-      <table class="tel-table" id="kavel-table" style="table-layout:fixed;width:100%;">
-        <thead>
-          <tr>
-            <th style="width:48px">Nr.</th>
-            <th>Product / Omschrijving</th>
-            <th style="width:110px">Ophoudprijs</th>
-            <th style="width:110px">Hoogste Bod</th>
-            <th>Extra gegevens</th>
-            <th style="width:140px">Inbrenger</th>
-            <th style="width:80px"></th>
-          </tr>
-        </thead>
-        <tbody id="kavel-tbody"></tbody>
-      </table>
-    </div>
+    <div id="kavel-list" class="kavel-list"></div>
   </div>
+
+  <style>
+    .kavel-print-header { display: none; }
+    .kavel-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #F6F1E5;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(232,160,0,0.18);
+    }
+    .kavel-card {
+      display: grid;
+      grid-template-columns: 64px 1fr auto auto;
+      gap: 16px;
+      align-items: center;
+      background: #FBF7EC;
+      border: 1px solid rgba(40,30,15,0.10);
+      border-radius: 10px;
+      padding: 10px 14px;
+      transition: box-shadow .15s, transform .15s, border-color .15s;
+      cursor: pointer;
+    }
+    .kavel-card:hover {
+      box-shadow: 0 4px 14px rgba(40,30,15,0.10);
+      border-color: rgba(232,160,0,0.45);
+      transform: translateY(-1px);
+    }
+    .kavel-card.is-leeg { opacity: .55; }
+    .kavel-card.is-leeg .kavel-titel { font-style: italic; font-weight: 500; color: #9A8050; }
+    .kavel-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.10);
+      letter-spacing: .5px;
+    }
+    .kavel-badge.c-orange { background: #F1A93A; }
+    .kavel-badge.c-blue   { background: #5E8EAE; }
+    .kavel-badge.c-green  { background: #6FA64B; }
+    .kavel-body { min-width: 0; }
+    .kavel-titel {
+      font-family: 'Fraunces', 'Georgia', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1C1400;
+      line-height: 1.25;
+      word-wrap: break-word;
+    }
+    .kavel-sub {
+      margin-top: 3px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.86rem;
+      color: #7A6030;
+      line-height: 1.35;
+    }
+    .kavel-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      color: #9A8050;
+      white-space: nowrap;
+    }
+    .kavel-meta .kavel-prijs {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #27AE60;
+      letter-spacing: .3px;
+    }
+    .kavel-meta .kavel-bod {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #E8A000;
+      letter-spacing: .3px;
+    }
+    .kavel-meta .kavel-inbrenger { font-size: 0.78rem; color: #9A8050; }
+    .kavel-photo {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #EFE6D2;
+      border: 1px solid rgba(40,30,15,0.10);
+      flex-shrink: 0;
+    }
+    .kavel-photo-empty {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      background: repeating-linear-gradient(45deg,#EFE6D2,#EFE6D2 6px,#E8DEC2 6px,#E8DEC2 12px);
+      border: 1px dashed rgba(122,96,48,0.35);
+      display: flex; align-items: center; justify-content: center;
+      color: #B0945A;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    @media (max-width: 720px) {
+      .kavel-card { grid-template-columns: 52px 1fr; row-gap: 8px; }
+      .kavel-badge { width: 48px; height: 48px; font-size: 1.5rem; border-radius: 10px; }
+      .kavel-meta { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: center; }
+      .kavel-photo, .kavel-photo-empty { grid-column: 1 / -1; width: 100%; height: 160px; }
+    }
+    /* Print: match PDF look */
+    @media print {
+      #tab-veilingkavels.print-active h2.pdf-title,
+      #tab-veilingkavels.print-active p.pdf-subtitle,
+      #tab-veilingkavels.print-active .kavel-screen-header,
+      #tab-veilingkavels.print-active > div[style*="background:#fff"] {
+        display: none !important;
+      }
+      #tab-veilingkavels.print-active .kavel-print-header {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0 0 14pt;
+        padding: 0;
+        gap: 4pt;
+      }
+      .kavel-print-logo { margin-bottom: 2pt; }
+      .kavel-print-title {
+        font-family: 'Fraunces', 'Georgia', serif;
+        font-size: 34pt;
+        font-weight: 800;
+        color: #1C1400;
+        line-height: 1;
+        letter-spacing: -0.5pt;
+      }
+      .kavel-print-sub {
+        font-family: 'Fraunces', 'Georgia', serif;
+        font-style: italic;
+        font-size: 14pt;
+        color: #5E8EAE;
+        font-weight: 500;
+      }
+      #tab-veilingkavels.print-active {
+        background: #F6F1E5 !important;
+        padding: 0 !important;
+      }
+      .kavel-list {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        gap: 6pt !important;
+      }
+      .kavel-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        background: #FBF7EC !important;
+        border: 0.5pt solid rgba(40,30,15,0.18) !important;
+        border-radius: 6pt !important;
+        padding: 6pt 10pt !important;
+        grid-template-columns: 38pt 1fr auto !important;
+        gap: 10pt !important;
+      }
+      .kavel-card.is-leeg { display: none !important; }
+      .kavel-badge {
+        width: 34pt !important;
+        height: 34pt !important;
+        border-radius: 6pt !important;
+        font-size: 18pt !important;
+        box-shadow: none !important;
+        color: #fff !important;
+      }
+      .kavel-badge.c-orange { background: #F1A93A !important; }
+      .kavel-badge.c-blue   { background: #5E8EAE !important; }
+      .kavel-badge.c-green  { background: #6FA64B !important; }
+      .kavel-titel {
+        font-family: 'Fraunces', 'Georgia', serif !important;
+        font-size: 11pt !important;
+        font-weight: 700 !important;
+        color: #1C1400 !important;
+        line-height: 1.2 !important;
+      }
+      .kavel-sub {
+        font-size: 8.5pt !important;
+        color: #7A6030 !important;
+        margin-top: 1pt !important;
+        line-height: 1.3 !important;
+      }
+      .kavel-meta {
+        font-size: 8pt !important;
+      }
+      .kavel-meta .kavel-prijs, .kavel-meta .kavel-bod {
+        font-size: 10pt !important;
+      }
+      .kavel-photo {
+        width: 38pt !important;
+        height: 38pt !important;
+        border-radius: 4pt !important;
+      }
+      .kavel-photo-empty { display: none !important; }
+      @page { margin: 12mm 14mm 16mm; size: A4; background: #F6F1E5; }
+    }
+  </style>
 
 </div><!-- end content -->
 
@@ -7410,46 +7620,61 @@ window.addEventListener('load', function() {
 });
 
 // ── VEILINGKAVELS ─────────────────────────────────────────
-var veilingkavels = (function() {
-  var k = [];
-  for (var i = 1; i <= 25; i++) k.push({ nummer: i, product: '', ophoudprijs: '', hoogstebod: '', extra: '', inbrenger: '' });
-  var d = [
-    { nummer:1,  product:'Teso aandeel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' },
-    { nummer:2,  product:'Teso aandeel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' },
-    { nummer:3,  product:'Teso aandeel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' },
-    { nummer:4,  product:'Handgegraveerde hanger met ketting, Zegel van Texel', ophoudprijs:'395', hoogstebod:'', extra:'Hoogste bieder ontvangt als extra een gratis gravure van 2 initialen', inbrenger:'' },
-    { nummer:5,  product:'Serie producten kleintje van gert', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Jeroen van hattum' },
-    { nummer:6,  product:'Reliquen sinterklaarjournaal 2025', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Jeroen van hattum' },
-    { nummer:7,  product:'BBQ', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'David Tijssen' },
-    { nummer:8,  product:'Twee Kaartejes Sompop met Meet en Greet', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Ben Rentenaar' },
-    { nummer:9,  product:'Partij Haardhout', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Willem van Tatenhoven' },
-    { nummer:10, product:'Pub Kwis voor bij u Thuis of op kantoor', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Rodny Stolk' },
-    { nummer:11, product:'Rondvlucht historische vlieger', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Mike de Bruin' },
-    { nummer:12, product:'Limo tour Texel', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Limo Taxi' },
-    { nummer:13, product:'Mailtje Grookte Poon', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Lions' },
-    { nummer:14, product:'Mailtje Gerookt Slippies', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Lions' },
-    { nummer:15, product:'Kaartjes voor Broadway 2 personen zondag', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'MJ' },
-    { nummer:16, product:'Rondrit rondom den Hoorn met Koets en paarden', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Jaap Lap' },
-    { nummer:17, product:'Rondleiding van natuurboer Benno Bakker door De Geul voor 2 pers', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'Benno Bakker' },
-    { nummer:18, product:'Vlees in Blik Assortiment van Slagerij Moorman en De Boer', ophoudprijs:'100', hoogstebod:'', extra:'', inbrenger:'Kees Moorman' },
-    { nummer:19, product:'Voor 4 personen Karten bij Karting Texel nabij de Akenbuurt', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'VV Racing BV' },
-    { nummer:20, product:'Behandeling bij Beauty Outline in de Koog Martine van Hintum', ophoudprijs:'100', hoogstebod:'', extra:'Luxe Cosmetische Pedicure en Relaxing Massage', inbrenger:'Martine van Hintum' },
-    { nummer:21, product:'Kunstwerk Waddenbluese', ophoudprijs:'125', hoogstebod:'', extra:'Gemengde Techniek, zelfgejutte mosselen in een Delfsblauw Jasje 50 bij 70 cm', inbrenger:'Joke Cofino' },
-    { nummer:22, product:'Schilderij van Cecile de Boer', ophoudprijs:'', hoogstebod:'', extra:'', inbrenger:'' }
+var veilingkavels = standaardKavelLijst();
+
+function standaardKavelLijst() {
+  return [
+    { nummer:1,  product:'Exclusief speciaalbierpakket – 3 unieke flessen speciaalbier', extra:'Drie zorgvuldig geselecteerde bieren van bijzondere brouwerijen.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:2,  product:'Broadway tickets voor 2 personen', extra:'Twee tickets voor het Broadway-evenement in Den Hoorn op Texel.', ophoudprijs:'', hoogstebod:'', inbrenger:'MJ', foto:'' },
+    { nummer:3,  product:'Rondrit door Den Hoorn met koets en paarden', extra:'Een sfeervolle rit door het pittoreske Den Hoorn.', ophoudprijs:'', hoogstebod:'', inbrenger:'Jaap Lap', foto:'' },
+    { nummer:4,  product:'Maaltje gerookte slippies', extra:'Heerlijke gerookte slippies.', ophoudprijs:'', hoogstebod:'', inbrenger:'Lions', foto:'' },
+    { nummer:5,  product:'TESO-aandeel', extra:'Een aandeel in ons prachtige veerbedrijf.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:6,  product:'TikTok Meet & Greet met Jan Willem Bakker', extra:'Ontmoet Jan Willem Bakker en maak een TikTok samen.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:7,  product:'Trampoline 3x2', extra:'Stevige trampoline van 3 bij 2 meter.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:8,  product:'Twee kaarten voor SomPop inclusief Meet & Greet met Danny de Munk', extra:'Geniet van SomPop en ontmoet Danny de Munk backstage.', ophoudprijs:'', hoogstebod:'', inbrenger:'Ben Rentenaar', foto:'' },
+    { nummer:9,  product:'Pubquiz bij u thuis of op kantoor', extra:'Een gezellige pubquiz op locatie, inclusief quizmaster.', ophoudprijs:'', hoogstebod:'', inbrenger:'Rodny Stolk', foto:'' },
+    { nummer:10, product:'Vrij kavel', extra:'De koper bepaalt de bestemming in overleg met Lions Club Texel.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:11, product:'Serie producten ‘Kleintje van Gert’', extra:'Een selectie ambachtelijke producten van Gert Coevert.', ophoudprijs:'', hoogstebod:'', inbrenger:'Jeroen van Hattum', foto:'' },
+    { nummer:12, product:'Decorstukken van het Sinterklaasjournaal 2025', extra:'Unieke decorstukken uit het Sinterklaasjournaal 2025.', ophoudprijs:'', hoogstebod:'', inbrenger:'Jeroen van Hattum', foto:'' },
+    { nummer:13, product:'Mini Bastard BBQ', extra:'Compacte, hoogwaardige BBQ voor echte liefhebbers.', ophoudprijs:'', hoogstebod:'', inbrenger:'David Tijssen', foto:'' },
+    { nummer:14, product:'Partij haardhout', extra:'Een royale partij droog haardhout.', ophoudprijs:'', hoogstebod:'', inbrenger:'Willem van Tatenhoven', foto:'' },
+    { nummer:15, product:'TESO-aandeel', extra:'Een aandeel in ons prachtige veerbedrijf.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:16, product:'Maaltje gerookte poon', extra:'Heerlijke gerookte poon.', ophoudprijs:'', hoogstebod:'', inbrenger:'Lions', foto:'' },
+    { nummer:17, product:'Handgegraveerde hanger met ketting – ‘Zegel van Texel’', extra:'Een uniek sieraad met een Texels karakter.', ophoudprijs:'395', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:18, product:'Rondvlucht in een historische Boeing Stearman uit 1944 boven Texel', extra:'Een onvergetelijke belevenis hoog boven het eiland.', ophoudprijs:'', hoogstebod:'', inbrenger:'Mike de Bruin', foto:'' },
+    { nummer:19, product:'Vlees-in-blik assortiment van Slagerij Moormann & de Boer', extra:'Een ambachtelijk assortiment voor de fijnproever.', ophoudprijs:'100', hoogstebod:'', inbrenger:'Kees Moormann', foto:'' },
+    { nummer:20, product:'Kunstwerk ‘Waddenblues’', extra:'Een sfeervol kunstwerk met een Texelse uitstraling.', ophoudprijs:'125', hoogstebod:'', inbrenger:'Joke Cofino', foto:'' },
+    { nummer:21, product:'Limo Tour Texel', extra:'Ontdek Texel op comfortabele en stijlvolle wijze.', ophoudprijs:'', hoogstebod:'', inbrenger:'Limo Taxi', foto:'' },
+    { nummer:22, product:'Schilderij van Cecile de Boer – gezicht op Den Hoorn', extra:'Een karaktervol schilderij van een geliefde plek op Texel.', ophoudprijs:'', hoogstebod:'', inbrenger:'Cecile de Boer', foto:'' },
+    { nummer:23, product:'Rondleiding door natuurboer Benno Bakker in De Geul', extra:'Een inspirerende ontdekkingstocht door natuur en landschap.', ophoudprijs:'', hoogstebod:'', inbrenger:'Benno Bakker', foto:'' },
+    { nummer:24, product:'Stripboek ‘Oorlog op Texel’ van Eric Hercules', extra:'Een bijzonder boek voor liefhebbers van historie en Texel.', ophoudprijs:'', hoogstebod:'', inbrenger:'Eric Hercules', foto:'' },
+    { nummer:25, product:'Karten voor 4 personen bij Circuitpark Karting Texel', extra:'Spanning, snelheid en plezier voor vier personen.', ophoudprijs:'', hoogstebod:'', inbrenger:'VV Racing BV', foto:'' },
+    { nummer:26, product:'Behandeling bij Beauty Outline in De Koog', extra:'Een heerlijk verwenmoment voor uzelf.', ophoudprijs:'100', hoogstebod:'', inbrenger:'Martine van Hintum', foto:'' },
+    { nummer:27, product:'Luxe zelfgemaakte houten sculptuur', extra:'Een stijlvol handgemaakt kunstobject met oog voor detail en vorm.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:28, product:'Exclusieve rondleiding in de Van Gendt Hallen in Amsterdam voor 8 personen', extra:'Een bijzondere rondleiding op een unieke locatie.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:29, product:'Kookboek ‘Van stad naar Wad’', extra:'Een smaakvol boek vol inspiratie en verhalen.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' },
+    { nummer:30, product:'Schilderij van Cecile de Boer – Eierlandse vuurtoren', extra:'Nog een prachtig werk van Cecile de Boer.', ophoudprijs:'', hoogstebod:'', inbrenger:'Cecile de Boer', foto:'' },
+    { nummer:31, product:'TESO-aandeel', extra:'Een bijzonder en symbolisch aandeel in de Texelse veerverbinding.', ophoudprijs:'', hoogstebod:'', inbrenger:'', foto:'' }
   ];
-  d.forEach(function(item) { k[item.nummer - 1] = item; });
-  return k;
-})();
+}
+
+function resetKavelsNaarStandaard() {
+  if (!confirm('Alle huidige kavels vervangen door de standaard 31 kavels uit de PDF?\n\nLet op: ingevoerde biedingen, prijzen, foto\u2019s en wijzigingen worden gewist.')) return;
+  veilingkavels = standaardKavelLijst();
+  renderVeilingkavels();
+  if (typeof slaOpMet === 'function') slaOpMet('kavellijst gereset naar standaard');
+  else if (typeof slaOp === 'function') slaOp();
+}
 
 var kavelEditIdx = null;
 
 function renderVeilingkavels() {
-  var tbody = document.getElementById('kavel-tbody');
-  if (!tbody) return;
+  var list = document.getElementById('kavel-list');
+  if (!list) return;
   var filled = veilingkavels.filter(function(k) { return k.product && k.product.trim(); }).length;
   var el = document.getElementById('kavel-count'); if (el) el.textContent = filled;
-  var pe = document.getElementById('kavel-pct'); if (pe) pe.textContent = filled + ' / 25';
-  var pf = document.getElementById('kavel-progress-fill'); if (pf) pf.style.width = Math.round(filled/25*100) + '%';
+  var pe = document.getElementById('kavel-pct'); if (pe) pe.textContent = filled + ' / ' + veilingkavels.length;
+  var pf = document.getElementById('kavel-progress-fill'); if (pf) pf.style.width = Math.round(filled/Math.max(1,veilingkavels.length)*100) + '%';
   var tO = 0, cO = 0, tB = 0, cB = 0;
   veilingkavels.forEach(function(k) {
     if (k.ophoudprijs && parseFloat(k.ophoudprijs) > 0) { tO += parseFloat(k.ophoudprijs); cO++; }
@@ -7457,21 +7682,25 @@ function renderVeilingkavels() {
   });
   var s1 = document.getElementById('kavel-stat-ophoud');     if (s1) s1.textContent = '';
   var s2 = document.getElementById('kavel-stat-biedingen');  if (s2) s2.textContent = cB > 0 ? '🔨 Biedingen: ' + cB + ' · €' + tB.toLocaleString('nl-NL') : '';
-  tbody.innerHTML = veilingkavels.map(function(k, i) {
+  var badgeKleuren = ['c-orange','c-blue','c-green'];
+  list.innerHTML = veilingkavels.map(function(k, i) {
     var leeg = !k.product || !k.product.trim();
-    var nrStyle = leeg ? 'color:#C0A870;font-family:Barlow Condensed,sans-serif;font-size:0.95rem;font-weight:800;' : 'color:#9B59B6;font-family:Barlow Condensed,sans-serif;font-size:0.95rem;font-weight:800;';
-    var prijsHtml = k.ophoudprijs ? '<span style="font-family:Barlow Condensed,sans-serif;font-weight:700;color:#27AE60;">€\u202f' + parseFloat(k.ophoudprijs).toLocaleString('nl-NL') + '</span>' : '<span style="color:#C0A870;">—</span>';
-    var bodHtml  = k.hoogstebod  ? '<span style="font-family:Barlow Condensed,sans-serif;font-weight:700;color:#E8A000;">€\u202f' + parseFloat(k.hoogstebod).toLocaleString('nl-NL')  + '</span>' : '<span style="color:#C0A870;">—</span>';
-    var prodHtml = leeg ? '<span style="color:#C0A870;font-style:italic;font-size:0.82rem;">— Leeg —</span>' : '<span style="font-weight:600;color:#1C1400;">' + escHtml(k.product) + '</span>';
-    return '<tr style="' + (leeg ? 'opacity:0.5;' : '') + '">' +
-      '<td><span style="' + nrStyle + '">' + k.nummer + '</span></td>' +
-      '<td>' + prodHtml + '</td>' +
-      '<td>' + prijsHtml + '</td>' +
-      '<td>' + bodHtml + '</td>' +
-      '<td style="font-size:0.78rem;color:#7A6030;">' + escHtml(leeg ? '' : (k.extra || '')) + '</td>' +
-      '<td style="font-size:0.82rem;color:#5A4A20;">' + escHtml(leeg ? '' : (k.inbrenger || '')) + '</td>' +
-      '<td style="text-align:center;"><button onclick="openKavelModal(' + i + ')" title="Bewerken" style="background:none;border:1px solid rgba(232,160,0,0.4);border-radius:5px;color:#C0A870;cursor:pointer;padding:4px 8px;font-size:0.85rem;transition:all .15s;" onmouseover="this.style.background=\'#E8A000\';this.style.color=\'#1C1400\'" onmouseout="this.style.background=\'none\';this.style.color=\'#C0A870\'">✏</button></td>' +
-    '</tr>';
+    var kleur = badgeKleuren[(k.nummer - 1) % 3];
+    var titel = leeg ? '— Leeg —' : escHtml(k.product);
+    var sub = leeg ? 'Klik om een kavel toe te voegen' : escHtml(k.extra || '');
+    var prijs = (!leeg && k.ophoudprijs) ? '<span class="kavel-prijs">€\u202f' + parseFloat(k.ophoudprijs).toLocaleString('nl-NL') + '</span>' : '';
+    var bod   = (!leeg && k.hoogstebod)  ? '<span class="kavel-bod">€\u202f' + parseFloat(k.hoogstebod).toLocaleString('nl-NL')  + ' bod</span>' : '';
+    var inbr  = (!leeg && k.inbrenger)   ? '<span class="kavel-inbrenger">' + escHtml(k.inbrenger) + '</span>' : '';
+    var photo = (!leeg && k.foto) ? '<img class="kavel-photo" src="' + k.foto + '" alt="">' : (leeg ? '' : '<div class="kavel-photo-empty" title="Geen foto">📷</div>');
+    return '<div class="kavel-card ' + (leeg ? 'is-leeg' : '') + '" onclick="openKavelModal(' + i + ')">' +
+      '<div class="kavel-badge ' + kleur + '">' + k.nummer + '</div>' +
+      '<div class="kavel-body">' +
+        '<div class="kavel-titel">' + titel + '</div>' +
+        (sub ? '<div class="kavel-sub">' + sub + '</div>' : '') +
+      '</div>' +
+      '<div class="kavel-meta">' + prijs + bod + inbr + '</div>' +
+      photo +
+    '</div>';
   }).join('');
 }
 
@@ -7491,6 +7720,7 @@ function openKavelModal(idx) {
     document.getElementById('km-hoogste-bod').value = '';
     document.getElementById('km-extra').value = '';
     document.getElementById('km-inbrenger').value = '';
+    kavelFotoZet('');
     if (delBtn) delBtn.style.display = 'none';
   } else {
     document.getElementById('km-nummer').value = k.nummer;
@@ -7499,6 +7729,7 @@ function openKavelModal(idx) {
     document.getElementById('km-hoogste-bod').value = k.hoogstebod || '';
     document.getElementById('km-extra').value = k.extra || '';
     document.getElementById('km-inbrenger').value = k.inbrenger || '';
+    kavelFotoZet(k.foto || '');
     if (delBtn) delBtn.style.display = (k.product && k.product.trim()) ? 'inline-block' : 'none';
   }
   document.getElementById('kavel-modal').classList.add('open');
@@ -7518,7 +7749,8 @@ function slaanKavelOp() {
   var bod = document.getElementById('km-hoogste-bod').value.trim();
   var extra = document.getElementById('km-extra').value.trim();
   var inbrenger = document.getElementById('km-inbrenger').value.trim();
-  var obj = { nummer: nummer, product: product, ophoudprijs: ophoud, hoogstebod: bod, extra: extra, inbrenger: inbrenger };
+  var foto = document.getElementById('km-foto-data').value || '';
+  var obj = { nummer: nummer, product: product, ophoudprijs: ophoud, hoogstebod: bod, extra: extra, inbrenger: inbrenger, foto: foto };
   var target = -1;
   for (var i = 0; i < veilingkavels.length; i++) { if (veilingkavels[i].nummer === nummer) { target = i; break; } }
   if (target >= 0) {
@@ -7539,10 +7771,61 @@ function verwijderKavel() {
   if (kavelEditIdx < 0) return;
   var k = veilingkavels[kavelEditIdx];
   if (!confirm('Kavel ' + k.nummer + ' leegmaken?')) return;
-  veilingkavels[kavelEditIdx] = { nummer: k.nummer, product: '', ophoudprijs: '', hoogstebod: '', extra: '', inbrenger: '' };
+  veilingkavels[kavelEditIdx] = { nummer: k.nummer, product: '', ophoudprijs: '', hoogstebod: '', extra: '', inbrenger: '', foto: '' };
   sluitKavelModal();
   renderVeilingkavels();
   slaOpMet('veilingkavel verwijderd');
+}
+
+function kavelFotoZet(dataUrl) {
+  var prev = document.getElementById('km-foto-preview');
+  var del = document.getElementById('km-foto-del');
+  var hidden = document.getElementById('km-foto-data');
+  if (!prev || !hidden) return;
+  hidden.value = dataUrl || '';
+  if (dataUrl) {
+    prev.innerHTML = '';
+    prev.style.background = '#EFE6D2 center/cover no-repeat url("' + dataUrl.replace(/"/g,'\\"') + '")';
+    prev.style.border = '1px solid rgba(40,30,15,0.10)';
+    if (del) del.style.display = 'inline-block';
+  } else {
+    prev.innerHTML = '📷';
+    prev.style.background = 'repeating-linear-gradient(45deg,#EFE6D2,#EFE6D2 6px,#E8DEC2 6px,#E8DEC2 12px)';
+    prev.style.border = '1px dashed rgba(122,96,48,0.4)';
+    if (del) del.style.display = 'none';
+  }
+}
+
+function kavelFotoWissen() {
+  var inp = document.getElementById('km-foto-input');
+  if (inp) inp.value = '';
+  kavelFotoZet('');
+}
+
+function kavelFotoKiezen(input) {
+  var file = input && input.files && input.files[0];
+  if (!file) return;
+  if (file.size > 8 * 1024 * 1024) { alert('Foto is te groot (max 8 MB). Kies een kleinere foto.'); input.value = ''; return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var max = 800;
+      var w = img.width, h = img.height;
+      if (w > max || h > max) { var r = Math.min(max/w, max/h); w = Math.round(w*r); h = Math.round(h*r); }
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      var out;
+      try { out = c.toDataURL('image/jpeg', 0.82); }
+      catch (err) { out = e.target.result; }
+      kavelFotoZet(out);
+    };
+    img.onerror = function() { alert('Kon de afbeelding niet laden.'); };
+    img.src = e.target.result;
+  };
+  reader.onerror = function() { alert('Kon het bestand niet lezen.'); };
+  reader.readAsDataURL(file);
 }
 // ── EINDE VEILINGKAVELS ────────────────────────────────────
 
@@ -7610,6 +7893,19 @@ function verwijderKavel() {
       <div class="taak-modal-field">
         <label>Inbrenger</label>
         <input id="km-inbrenger" type="text" placeholder="Naam van de inbrenger">
+      </div>
+      <div class="taak-modal-field">
+        <label>Foto van het kavel</label>
+        <div id="km-foto-row" style="display:flex;gap:12px;align-items:center;">
+          <div id="km-foto-preview" style="width:84px;height:84px;border-radius:10px;background:repeating-linear-gradient(45deg,#EFE6D2,#EFE6D2 6px,#E8DEC2 6px,#E8DEC2 12px);border:1px dashed rgba(122,96,48,0.4);display:flex;align-items:center;justify-content:center;color:#B0945A;font-size:1.6rem;flex-shrink:0;overflow:hidden;">📷</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+            <label for="km-foto-input" style="background:#FEFAF0;border:1px solid rgba(232,160,0,0.45);color:#7A5A10;padding:7px 12px;border-radius:6px;font-family:Barlow,sans-serif;font-size:0.85rem;cursor:pointer;text-align:center;font-weight:600;">📁 Foto kiezen…</label>
+            <input id="km-foto-input" type="file" accept="image/*" style="display:none;" onchange="kavelFotoKiezen(this)">
+            <button type="button" id="km-foto-del" onclick="kavelFotoWissen()" style="display:none;background:none;border:1px solid rgba(192,48,48,0.35);color:#C03030;padding:5px 10px;border-radius:6px;font-family:Barlow,sans-serif;font-size:0.78rem;cursor:pointer;">Foto verwijderen</button>
+            <span style="font-size:0.72rem;color:#9A8050;">JPG/PNG, automatisch verkleind. Wordt opgeslagen bij het kavel.</span>
+          </div>
+        </div>
+        <input type="hidden" id="km-foto-data" value="">
       </div>
       <div class="taak-modal-btns">
         <button class="taak-modal-cancel" id="kavel-del-btn" onclick="verwijderKavel()" style="margin-right:auto;color:#C03030;border-color:rgba(192,48,48,0.35);display:none;">🗑 Verwijderen</button>
@@ -8137,6 +8433,160 @@ function verwijderKavel() {
   }
 })();
 </script>
+
+<style id="luxe-print">
+@media print {
+  @page { size: A4; margin: 18mm 14mm 20mm; background: #F6F1E5; }
+  html, body { background: #F6F1E5 !important; }
+  body { font-family: 'Barlow', Arial, sans-serif !important; color: #1C1400 !important; }
+
+  /* Hide all interactive chrome on every print */
+  .hero, .tabs-wrapper, footer, #save-indicator, .pdf-btn, .tel-add-box,
+  .tel-edit-btn, .tel-del-btn, .filter-bar, .add-taak-row, .unassigned-box,
+  .drag-hint, .taak-del-btn, .taak-edit-btn, .vrijw-edit-btn, .vrijw-del-btn,
+  .vrijw-add-section, .budget-add-row-btn, .budget-row-del, .cat-add-btn,
+  #vj-toggle-btn, .sponsor-add-row, .panel-close, .db-add-btn-top,
+  .db-edit-btn, .db-live-bar, .db-modal-overlay, .db-day-tabs,
+  .db-progress-wrap, .db-countdown-bar, .db-view-toggle, .draaiboek-toolbar,
+  .taak-modal-overlay, .login-screen, #chapter-intro, #bute-toast-host,
+  .sync-btn, .tel-add-btn, .kavel-screen-header,
+  #tab-veilingkavels.print-active > div[style*="background:#fff"] { display: none !important; }
+
+  /* Luxe report header — auto from existing pdf-title/subtitle */
+  .section.print-active { display: block !important; }
+  .section.print-active h2.pdf-title {
+    display: block !important;
+    font-family: 'Fraunces', 'Playfair Display', 'Georgia', serif !important;
+    font-size: 32pt !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.6pt !important;
+    color: #1C1400 !important;
+    margin: 0 0 2pt !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+    border: none !important;
+  }
+  .section.print-active p.pdf-subtitle {
+    display: block !important;
+    font-family: 'Fraunces', 'Georgia', serif !important;
+    font-style: italic !important;
+    font-weight: 500 !important;
+    font-size: 12pt !important;
+    color: #5E8EAE !important;
+    text-align: center !important;
+    margin: 0 auto 10pt !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .section.print-active::before {
+    content: "";
+    display: block;
+    width: 64pt;
+    height: 4pt;
+    margin: 0 auto 14pt;
+    background: linear-gradient(90deg, #F1A93A 0 33%, #5E8EAE 33% 66%, #6FA64B 66% 100%);
+    border-radius: 2pt;
+  }
+
+  /* Screen-only section headers shouldn't show */
+  .section.print-active .section-title,
+  .section.print-active .section-sub { display: none !important; }
+
+  /* Tables: luxe */
+  .section.print-active table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    font-size: 9.5pt !important;
+    background: #FBF7EC !important;
+    border: 0.5pt solid rgba(40,30,15,0.2) !important;
+    border-radius: 4pt !important;
+    overflow: hidden;
+  }
+  .section.print-active table thead th {
+    background: #1C1400 !important;
+    color: #F6F1E5 !important;
+    font-family: 'Barlow Condensed', sans-serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6pt !important;
+    font-size: 8.5pt !important;
+    padding: 6pt 8pt !important;
+    text-align: left !important;
+    border: none !important;
+  }
+  .section.print-active table tbody td {
+    padding: 5pt 8pt !important;
+    border-top: 0.4pt solid rgba(40,30,15,0.12) !important;
+    color: #1C1400 !important;
+    vertical-align: top !important;
+  }
+  .section.print-active table tbody tr:nth-child(even) td {
+    background: rgba(232,160,0,0.05) !important;
+  }
+  .section.print-active table tr.cat-row td {
+    background: #F1A93A !important;
+    color: #1C1400 !important;
+    font-family: 'Barlow Condensed', sans-serif !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6pt !important;
+    font-size: 9pt !important;
+    padding: 5pt 8pt !important;
+  }
+  .section.print-active table tr { page-break-inside: avoid; }
+
+  /* Inputs become plain text in print */
+  .section.print-active input[type="text"],
+  .section.print-active input[type="number"],
+  .section.print-active input:not([type]),
+  .section.print-active textarea,
+  .section.print-active select {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    color: #1C1400 !important;
+    font: inherit !important;
+    width: 100% !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Team / sponsor / vrijwilliger cards */
+  .section.print-active .team-card,
+  .section.print-active .sponsor-card,
+  .section.print-active .vrijw-card,
+  .section.print-active .werkplek-card,
+  .section.print-active .panel,
+  .section.print-active .db-fase-row {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    background: #FBF7EC !important;
+    border: 0.5pt solid rgba(40,30,15,0.18) !important;
+    border-radius: 5pt !important;
+    box-shadow: none !important;
+    margin-bottom: 6pt !important;
+    padding: 8pt 10pt !important;
+  }
+
+  /* Page footer with page count */
+  body::after {
+    content: "BUTE 2026 · Lions Club Texel · pagina " counter(page);
+    position: fixed;
+    bottom: 6mm; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8pt;
+    letter-spacing: 1.5pt;
+    text-transform: uppercase;
+    color: #9A8050;
+  }
+
+  /* Defensive overrides to keep colors crisp */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
 
 </body>
 </html>
