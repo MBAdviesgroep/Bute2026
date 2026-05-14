@@ -4854,6 +4854,17 @@ function verwerkData(data) {
   if (data.draaiboekVrijdag && Array.isArray(data.draaiboekVrijdag)) draaiboekVrijdag = data.draaiboekVrijdag;
   if (data.draaiboekZaterdag && Array.isArray(data.draaiboekZaterdag)) draaiboekZaterdag = data.draaiboekZaterdag;
   if (data.draaiboekZondag && Array.isArray(data.draaiboekZondag)) draaiboekZondag = data.draaiboekZondag;
+  // Garandeer dat nieuwe verplichte draaiboek-items aanwezig zijn (worden anders door cloud overschreven)
+  var verplichteZaterdag = [
+    { tijd:'09:30', onderdeel:'Centrale Briefing — alle vrijwilligers', verantw:'Maarten-Jeroen den Boer', locatie:'Restaurant Bonte Belevenis', benodigd:'Taakoverzicht, presentielijst, koffie/thee', status:'gepland', notities:'Iedereen aanwezig — kort doornemen rolverdeling, tijden en aandachtspunten', actie:'Briefingdocument afdrukken', fase:'opbouw' },
+    { tijd:'14:30 – 14:45', onderdeel:'Optreden The Folkies — 3 jonge Texelse meiden', verantw:'Podium / Technisch', locatie:'Hoofdpodium', benodigd:'Microfoons, monitors', status:'bevestigd', notities:'Kort optreden, vandaag geregeld', actie:'Soundcheck inplannen', fase:'programma' }
+  ];
+  verplichteZaterdag.forEach(function(nieuw) {
+    var bestaat = draaiboekZaterdag.some(function(d) {
+      return (d.onderdeel || '').trim().toLowerCase() === nieuw.onderdeel.trim().toLowerCase();
+    });
+    if (!bestaat) draaiboekZaterdag.push(nieuw);
+  });
   // Load current dag
   if (dbHuidigeDag === 'data') draaiboek = draaiboekData;
   else if (dbHuidigeDag === 'vrijdag') draaiboek = draaiboekVrijdag;
@@ -4933,18 +4944,38 @@ function verwerkData(data) {
     herbereken();
   }
   if (data.sponsors) {
-    // Hardcoded lijst is ALTIJD leidend. Cloud updates ALLEEN status + notitie per naam.
+    // Merge cloud + hardcoded. Hardcoded entries blijven altijd bestaan (op naam),
+    // maar status/notitie/contact/email/telefoon worden uit de cloud overgenomen.
+    // Sponsoren die ALLEEN in de cloud staan (handmatig toegevoegd) worden ook getoond.
     Object.keys(data.sponsors).forEach(function(k) {
       if (!sponsorData[k]) return;
-      var cloudMap = {};
-      (data.sponsors[k] || []).forEach(function(ce) {
-        cloudMap[(ce.naam||'').trim().toLowerCase()] = ce;
+      var cloudEntries = data.sponsors[k] || [];
+      var lokaleMap = {};
+      sponsorData[k].entries.forEach(function(de, idx) {
+        lokaleMap[(de.naam||'').trim().toLowerCase()] = { idx: idx, entry: de };
       });
-      sponsorData[k].entries.forEach(function(de) {
-        var ce = cloudMap[(de.naam||'').trim().toLowerCase()];
-        if (ce) {
-          if (ce.status)  de.status  = ce.status;
-          if (ce.notitie !== undefined) de.notitie = ce.notitie;
+      cloudEntries.forEach(function(ce) {
+        var key = (ce.naam||'').trim().toLowerCase();
+        if (!key) return;
+        var bestaand = lokaleMap[key];
+        if (bestaand) {
+          // Update bestaande hardcoded entry met cloud-data
+          var de = bestaand.entry;
+          if (ce.status)               de.status   = ce.status;
+          if (ce.notitie !== undefined) de.notitie  = ce.notitie;
+          if (ce.contact !== undefined && ce.contact !== '')  de.contact  = ce.contact;
+          if (ce.email !== undefined   && ce.email !== '')    de.email    = ce.email;
+          if (ce.telefoon !== undefined && ce.telefoon !== '') de.telefoon = ce.telefoon;
+        } else {
+          // Nieuwe sponsor uit cloud — toevoegen
+          sponsorData[k].entries.push({
+            naam:     ce.naam     || '',
+            contact:  ce.contact  || '',
+            email:    ce.email    || '',
+            telefoon: ce.telefoon || '',
+            status:   ce.status   || 'benaderd',
+            notitie:  ce.notitie  || ''
+          });
         }
       });
       updateCount(k);
@@ -5006,8 +5037,6 @@ function laadVanCloud() {
     herbereken();
     renderAlles();
     setStatus('\u2714 Gesynchroniseerd', 'ok');
-    // Direct terugschrijven zodat cloud-sponsoren worden opgeschoond naar de hardcoded lijst
-    slaOpMet('sponsors gesynchroniseerd');
   })
   .catch(function(e) {
     console.error(e);
@@ -5734,7 +5763,10 @@ function printVrijwilligers() {
 var teams = [
   { naam: 'Coördinatie', icon: '\ud83c\udfaf', lead: 'Maarten-Jeroen den Boer' },
   { naam: 'Vergunningen',  icon: '\u2696\ufe0f',  lead: 'Morten Eschweiler' },
-  { naam: 'Veiling',       icon: '\ud83d\udd28',  lead: 'Ben Rentenaar' },
+  { naam: 'Veiling',       icon: '\ud83d\udd28',  lead: 'Ingmar Veeger & Maarten-Jeroen den Boer' },
+  { naam: 'Opbouw veilingruimte', icon: '\ud83e\udd29', lead: 'Ben Rentenaar, Kees Boerse & Joop Groen' },
+  { naam: 'Parkeren',      icon: '\ud83d\ude97',  lead: 'Martijn Eelman & Brandweer (3 man)' },
+  { naam: 'Administratie & Afrekenen', icon: '\ud83d\udcb3', lead: 'Astrid van der Vis' },
   { naam: 'Podium',        icon: '\ud83c\udfa4',  lead: 'Paul Krugers' },
   { naam: 'Horeca',        icon: '\ud83c\udf79',  lead: 'Kees Dros' },
   { naam: 'Kinderactiviteiten', icon: '\ud83c\udf88', lead: 'Jan Klok' },
@@ -6109,7 +6141,8 @@ var sponsorData = {
     { naam: 'Café-Restaurant Vogelhuis Oranjerie B.V.', contact: 'Anton van der Vis', email: 'antonvandervis@texel.com',        telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'CVI Texel',                       contact: 'Peerke Reijnders',         email: 'Peerke@cvi-texel.nl',              telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'JMJ Ambachtsatelier Texel',       contact: 'Jacqueline Jimmink',       email: 'info@jacquelinejimmink.com',        telefoon: '', status: 'afgesloten', notitie: '' },
-    { naam: 'Qsenz',                           contact: 'Ewout Riteco',             email: 'administratie@qsenz.nl',           telefoon: '', status: 'afgesloten', notitie: '' }
+    { naam: 'Qsenz',                           contact: 'Ewout Riteco',             email: 'administratie@qsenz.nl',           telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'VVV Texel',                       contact: 'Rosalie Lap',              email: '',                                  telefoon: '', status: 'afgesloten', notitie: '' }
   ]},
   'advertentie':{ naam: 'Advertentie', prijs: 100, entries: [
     { naam: 'Aldubo BV',                       contact: 'Mees den Boer',            email: 'Mees@mbadviesgroep.nl',             telefoon: '06 30449898', status: 'afgesloten', notitie: '' },
@@ -6135,7 +6168,10 @@ var sponsorData = {
     { naam: 'Nauta boek',                      contact: 'Jook Nauta',               email: 'nautex@planet.nl',                  telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Strandpaviljoen Paal 9 BV',       contact: 'Rene Jager',               email: 'info@paal9.nl',                     telefoon: '', status: 'afgesloten', notitie: '' },
     { naam: 'Vakatieburo Kobeko',              contact: 'Dave Dijkstra',            email: 'info@kobeko.nl',                    telefoon: '', status: 'afgesloten', notitie: '' },
-    { naam: 'VOF Deco-Sport',                  contact: 'Robin Schoo',              email: 'sportshoptexel@gmail.com',          telefoon: '', status: 'afgesloten', notitie: '' }
+    { naam: 'VOF Deco-Sport',                  contact: 'Robin Schoo',              email: 'sportshoptexel@gmail.com',          telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Elk Advies',                      contact: 'Fedor van Elk',            email: '',                                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'Wasstraat Rentenaar',             contact: 'Ben Rentenaar',            email: '',                                  telefoon: '', status: 'afgesloten', notitie: '' },
+    { naam: 'BijJef',                          contact: 'Jef Schuur',               email: '',                                  telefoon: '', status: 'afgesloten', notitie: '' }
   ]},
   'kraam':      { naam: 'Commerciële kraam', prijs: 125, entries: [] },
   'mini-kraam': { naam: 'Goede doelen / vereniging kraam', prijs: 0, entries: [] }
@@ -6813,6 +6849,7 @@ var draaiboekVrijdag = [
 var draaiboekZaterdag = [
   // OPBOUW
   { tijd:'08:00', onderdeel:'Aankomst crew & vrijwilligers', verantw:'Coördinator', locatie:'Festivalterrein', benodigd:'Badges, taakoverzicht', status:'gepland', notities:'Check aanwezigheid iedereen', actie:'Presentielijst bijhouden', fase:'opbouw' },
+  { tijd:'09:30', onderdeel:'Centrale Briefing — alle vrijwilligers', verantw:'Maarten-Jeroen den Boer', locatie:'Restaurant Bonte Belevenis', benodigd:'Taakoverzicht, presentielijst, koffie/thee', status:'gepland', notities:'Iedereen aanwezig — kort doornemen rolverdeling, tijden en aandachtspunten', actie:'Briefingdocument afdrukken', fase:'opbouw' },
   { tijd:'08:00', onderdeel:'Opbouw podium & geluidsinstallatie', verantw:'Technisch team', locatie:'Hoofdpodium', benodigd:'Geluidssysteem, kabels, microfoons, mixer', status:'gepland', notities:'Soundcheck gereed voor 10:45', actie:'Geluidstechnicus bevestigen', fase:'opbouw' },
   { tijd:'08:30', onderdeel:'Opbouw stands & kraampjes', verantw:'Logistiek team', locatie:'Festivalterrein', benodigd:'Tafels, stoelen, parasols, banners', status:'gepland', notities:'', actie:'', fase:'opbouw' },
   { tijd:'09:00', onderdeel:'Opbouw Rad van Fortuin', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, prijzentafel, microfoon', status:'gepland', notities:'Test draaien voor aanvang', actie:'Prijzen gereed leggen', fase:'opbouw' },
@@ -6828,6 +6865,7 @@ var draaiboekZaterdag = [
   { tijd:'13:00 – 13:30', onderdeel:'Rad van Fortuin — Ronde 1', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, microfoon, prijzen', status:'gepland', notities:'Deelnemers werven uit publiek', actie:'', fase:'programma' },
   { tijd:'13:30 – 14:00', onderdeel:'Artex Dance — Denise Barhorst', verantw:'Denise Barhorst', locatie:'Hoofdpodium', benodigd:'Muziekinstallatie, ruimte podium', status:'gepland', notities:'Dansdemonstratie / -show', actie:'Muziek playlist aanleveren', fase:'programma' },
   { tijd:'14:00 – 14:15', onderdeel:'DJ Paul — Tussenset', verantw:'DJ Paul', locatie:'Hoofdpodium', benodigd:'DJ-set actief', status:'gepland', notities:'', actie:'', fase:'programma' },
+  { tijd:'14:30 – 14:45', onderdeel:'Optreden The Folkies — 3 jonge Texelse meiden', verantw:'Podium / Technisch', locatie:'Hoofdpodium', benodigd:'Microfoons, monitors', status:'bevestigd', notities:'Kort optreden, vandaag geregeld', actie:'Soundcheck inplannen', fase:'programma' },
   { tijd:'14:15 – 15:00', onderdeel:'Rad van Fortuin — Ronde 2', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, microfoon, prijzen', status:'gepland', notities:'', actie:'', fase:'programma' },
   { tijd:'15:00 – 16:00', onderdeel:'Artiest 2 — Live optreden (60 min)', verantw:'Artiest 2 / Technisch', locatie:'Hoofdpodium', benodigd:'Technische rider artiest 2', status:'bevestigen', notities:'Setlist ontvangen?', actie:'Rider & contract bevestigen', fase:'programma' },
   { tijd:'16:00 – 16:15', onderdeel:'Rad van Fortuin — Finale ronde', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, microfoon, prijzen', status:'gepland', notities:'Hoofdprijs uitreiken', actie:'', fase:'programma' },
