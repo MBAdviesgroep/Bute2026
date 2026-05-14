@@ -4862,9 +4862,8 @@ function verwerkData(data) {
       { naam: 'Ben Rentenaar',           plek: 'Veiling',            rol: 'Uitstalling opbouwen' },
       { naam: 'Morten Eschweiler',       plek: 'Parkeren / Verkeer', rol: 'Coördinatie parkeerterrein (start event)' },
       { naam: 'Jeroen van Hattum',       plek: 'PR & Communicatie',  rol: 'PR & Communicatie' },
-      { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer', rol: 'Chauffeur · Marktkramen indeling' },
-      { naam: 'Kees Dros',               plek: 'Horeca / Bar',       rol: 'Coördinator Horeca · PR' },
-      { naam: 'Maarten-Jeroen den Boer', plek: '',                   rol: 'Coördinatie · Veiling fin. afwikkeling · Marktkramen contact & indeling' }
+      { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer', rol: 'Chauffeur' },
+      { naam: 'Kees Dros',               plek: 'Horeca / Bar',       rol: 'Coördinator Horeca · PR' }
     ];
     verplichteVrijwUpdates.forEach(function(upd) {
       cloudVrijw.forEach(function(v) {
@@ -4878,6 +4877,40 @@ function verwerkData(data) {
     cloudVrijw = cloudVrijw.filter(function(v) {
       return (v.naam||'').trim().toLowerCase() !== 'floor den boer';
     });
+    // Migratie Marktkramen: zorg dat MJ (1x) en Ingmar daar als vrijwilliger staan met juiste rol.
+    // En verwijder MJ uit "niet toegewezen" (plek leeg) en oude entries met de gecombineerde rol.
+    var ALLE_DAGEN_MJ = ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'];
+    var ZA_DAGEN = ['Zaterdagochtend','Zaterdagmiddag'];
+    // 1) Verwijder MJ-entries zonder plek of met de oude lange "Coördinatie · Veiling fin..." rol
+    cloudVrijw = cloudVrijw.filter(function(v) {
+      var isMJ = ((v.naam||'').trim().toLowerCase() === 'maarten-jeroen den boer');
+      if (!isMJ) return true;
+      if (!v.plek || v.plek === '') return false;
+      if (/co(\u00f6|o)rdinatie.*veiling/i.test(v.rol||'')) return false;
+      return true;
+    });
+    // 2) Controleer of MJ al op Marktkramen staat (in welke vorm dan ook)
+    var mjOpMarktkramen = cloudVrijw.some(function(v) {
+      return (v.naam||'').trim().toLowerCase() === 'maarten-jeroen den boer' && v.plek === 'Marktkramen';
+    });
+    if (!mjOpMarktkramen) {
+      cloudVrijw.push({ naam: 'Maarten-Jeroen den Boer', plek: 'Marktkramen', rol: 'Indeling kramen & contact kraamhouders', dagen: ALLE_DAGEN_MJ });
+    } else {
+      // Zorg dat zijn rol consistent is
+      cloudVrijw.forEach(function(v) {
+        if ((v.naam||'').trim().toLowerCase() === 'maarten-jeroen den boer' && v.plek === 'Marktkramen') {
+          v.rol = 'Indeling kramen & contact kraamhouders';
+        }
+      });
+    }
+    // 3) Ingmar Veeger op Marktkramen (extra naast Parkeren)
+    var ingmarOpMarktkramen = cloudVrijw.some(function(v) {
+      return (v.naam||'').trim().toLowerCase() === 'ingmar veeger' && v.plek === 'Marktkramen';
+    });
+    if (!ingmarOpMarktkramen) {
+      cloudVrijw.push({ naam: 'Ingmar Veeger', plek: 'Marktkramen', rol: 'Indeling kraamhouders', dagen: ZA_DAGEN });
+    }
+    window._migratieGedaan = true;
     vrijwilligers = cloudVrijw;
   }
   if (data.verwijderdeTaken && Array.isArray(data.verwijderdeTaken)) {
@@ -6610,7 +6643,7 @@ function hernoemWerkplek(i, nieuweNaam) {
 
 var vrijwilligers = [
   // Lions – alle 3 dagen aanwezig (vrijdag + zaterdag + zondag)
-  { naam: 'Maarten-Jeroen den Boer', plek: '',                    rol: 'Coördinatie · Veiling fin. afwikkeling · Marktkramen contact & indeling', dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Maarten-Jeroen den Boer', plek: 'Marktkramen',         rol: 'Indeling kramen & contact kraamhouders', dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Kees Dros',               plek: 'Horeca / Bar',        rol: 'Coördinator Horeca · PR',                 dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Jan Bot',                 plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Andrew Albers',           plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
@@ -6636,7 +6669,8 @@ var vrijwilligers = [
   { naam: 'Jeroen van Hattum',       plek: 'PR & Communicatie',   rol: 'PR & Communicatie',                         dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Peerke Reijnders',        plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Jan Klok',                plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
-  { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer',  rol: 'Chauffeur · Marktkramen indeling',     dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer',  rol: 'Chauffeur',                            dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Ingmar Veeger',           plek: 'Marktkramen',         rol: 'Indeling kraamhouders',                dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
 
   // Tiger (partners/familieleden Lions) – zaterdag
   { naam: 'Titia Klok',              plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
