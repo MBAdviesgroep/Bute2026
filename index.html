@@ -3569,7 +3569,7 @@ body {
       <button class="filter-btn" onclick="filterTaken('Podium', this)">Podium</button>
       <button class="filter-btn" onclick="filterTaken('Horeca', this)">Horeca</button>
       <button class="filter-btn" onclick="filterTaken('Kinderactiviteiten', this)">Kinderactiviteiten</button>
-      <button class="filter-btn" onclick="filterTaken('Communicatie', this)">Communicatie</button>
+      <button class="filter-btn" onclick="filterTaken('PR / Communicatie', this)">PR / Communicatie</button>
       <button class="filter-btn" onclick="filterTaken('Logistiek', this)">Logistiek</button>
       <button class="filter-btn" onclick="filterTaken('Overige', this)">Overige</button>
     </div>
@@ -3651,19 +3651,18 @@ body {
         <div class="budget-box-header baten">🟢 Baten</div>
         <table class="budget-table" id="baten-table">
           <tr class="cat-row"><td colspan="2">Sponsoring</td><td style="text-align:right;padding:4px 10px 4px 0"><button type="button" class="cat-add-btn" onclick="voegRijNaCatToe(this,'baten')" title="Post toevoegen">&#xFF0B;</button></td></tr>
-          <tr><td><input class="budget-name-input" value="Parkeerplaats (Fedor)"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
+          <tr><td><input class="budget-name-input" value="Opbrengst vrijwilligersdag"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0" value="2500"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
           <tr><td><input class="budget-name-input" value="Sponsor- &amp; kraaminkomsten"></td><td><input class="budget-input baten-input" id="sponsor-kraam-input" type="number" placeholder="0" min="0" readonly style="background:#F5F0E8;color:#9A8050;cursor:default;" title="Automatisch gekoppeld aan sponsorinkomsten"></td><td><span style="font-size:0.65rem;color:#9A8050;padding:0 6px;">🔗</span></td></tr>
           <tr class="cat-row"><td colspan="2">Veiling</td><td style="text-align:right;padding:4px 10px 4px 0"><button type="button" class="cat-add-btn" onclick="voegRijNaCatToe(this,'baten')" title="Post toevoegen">&#xFF0B;</button></td></tr>
           <tr><td><input class="budget-name-input" value="Commissie Veiling"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
           <tr><td><input class="budget-name-input" value="Veilingkavels"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
           <tr class="cat-row"><td colspan="2">Entree &amp; Horeca</td><td style="text-align:right;padding:4px 10px 4px 0"><button type="button" class="cat-add-btn" onclick="voegRijNaCatToe(this,'baten')" title="Post toevoegen">&#xFF0B;</button></td></tr>
-          <tr><td><input class="budget-name-input" value="Entree inkomsten"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
+          <tr><td><input class="budget-name-input" value="Strippenkaarten"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
+          <tr><td><input class="budget-name-input" value="Donatie-emmers"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
+          <tr><td><input class="budget-name-input" value="QR-doneercodes"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
           <tr><td><input class="budget-name-input" value="Visverkoop"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
           <tr><td><input class="budget-name-input" value="Horeca omzet"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
-          <tr><td><input class="budget-name-input" value="Contante catering"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
-          <tr class="cat-row"><td colspan="2">Diversen</td><td style="text-align:right;padding:4px 10px 4px 0"><button type="button" class="cat-add-btn" onclick="voegRijNaCatToe(this,'baten')" title="Post toevoegen">&#xFF0B;</button></td></tr>
-          <tr><td><input class="budget-name-input" value="Commissie Wildkar"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
-          <tr><td><input class="budget-name-input" value="Commissie Crepes"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
+          <tr><td><input class="budget-name-input" value="Commissie Crêpekar (optioneel)"></td><td><input class="budget-input baten-input" type="number" placeholder="0" min="0"></td><td><button class="budget-row-del" onclick="verwijderBudgetRij(this)">✕</button></td></tr>
           <tr class="total-row" id="total-row-baten"><td style="font-size:0.8rem;color:#7A6030;">Totaal Baten</td><td style="text-align:right;"><strong id="subtotal-baten" style="font-size:0.95rem;color:#27AE60;">€ 0</strong></td><td id="vj-total-baten-cell" style="display:none;text-align:right;padding:4px 8px;"><strong id="subtotal-baten-vj" style="font-size:0.88rem;color:#9A8050;">€ 0</strong><div style="font-size:0.62rem;color:#9A8050;">2025</div></td></tr>
         </table>
       </div>
@@ -4856,6 +4855,29 @@ function verwerkData(data) {
     defaultVrijw.forEach(function(dv) {
       if (cloudNamen.indexOf((dv.naam||'').trim().toLowerCase()) === -1) cloudVrijw.push(dv);
     });
+    // Geforceerde plek/rol updates — overschrijven cloud-versie (laatste afspraak is leidend)
+    var verplichteVrijwUpdates = [
+      { naam: 'Astrid van der Vis',      plek: 'Veiling',            rol: 'Afrekenen veilingkavels na afloop' },
+      { naam: 'Joop Groen',              plek: 'Veiling',            rol: 'Uitstalling opbouwen' },
+      { naam: 'Ben Rentenaar',           plek: 'Veiling',            rol: 'Uitstalling opbouwen' },
+      { naam: 'Morten Eschweiler',       plek: 'Parkeren / Verkeer', rol: 'Coördinatie parkeerterrein (start event)' },
+      { naam: 'Jeroen van Hattum',       plek: 'PR & Communicatie',  rol: 'PR & Communicatie' },
+      { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer', rol: 'Chauffeur · Marktkramen indeling' },
+      { naam: 'Kees Dros',               plek: 'Horeca / Bar',       rol: 'Coördinator Horeca · PR' },
+      { naam: 'Maarten-Jeroen den Boer', plek: '',                   rol: 'Coördinatie · Veiling fin. afwikkeling · Marktkramen contact & indeling' }
+    ];
+    verplichteVrijwUpdates.forEach(function(upd) {
+      cloudVrijw.forEach(function(v) {
+        if ((v.naam||'').trim().toLowerCase() === upd.naam.toLowerCase()) {
+          v.plek = upd.plek;
+          v.rol  = upd.rol;
+        }
+      });
+    });
+    // Floor den Boer is uitgevallen — verwijderen uit de lijst
+    cloudVrijw = cloudVrijw.filter(function(v) {
+      return (v.naam||'').trim().toLowerCase() !== 'floor den boer';
+    });
     vrijwilligers = cloudVrijw;
   }
   if (data.verwijderdeTaken && Array.isArray(data.verwijderdeTaken)) {
@@ -4864,6 +4886,17 @@ function verwerkData(data) {
     });
   }
   if (data.taken && Array.isArray(data.taken)) {
+    // Migratie: oude teamnaam "Communicatie" → "PR / Communicatie"
+    var migratiePR = false;
+    data.taken.forEach(function(t) {
+      if (t.team === 'Communicatie') { t.team = 'PR / Communicatie'; migratiePR = true; }
+      if (t.teams && Array.isArray(t.teams)) {
+        var orig = t.teams.join('|');
+        t.teams = t.teams.map(function(n) { return n === 'Communicatie' ? 'PR / Communicatie' : n; });
+        if (orig !== t.teams.join('|')) migratiePR = true;
+      }
+    });
+    if (migratiePR) window._migratieGedaan = true;
     // Samenvoegen: cloud taken bewaren + nieuwe defaults toevoegen die nog niet in cloud zitten
     var cloudTaken = data.taken;
     var defaultTaken = taken; // de taken uit de HTML defaults
@@ -4922,11 +4955,30 @@ function verwerkData(data) {
       if (!w.minDagen) w.minDagen = {};
       if (w.naam === 'Activiteiten') w.naam = 'Kinderactiviteiten';
     });
+    // Voeg hardcoded werkplekken toe die nog niet in de cloud staan
+    var cloudWpNamen = data.werkplekken.map(function(w) { return (w.naam||'').trim().toLowerCase(); });
+    werkplekken.forEach(function(dw) {
+      if (cloudWpNamen.indexOf((dw.naam||'').trim().toLowerCase()) === -1) {
+        data.werkplekken.push({ naam: dw.naam, icon: dw.icon, min: 0, minDagen: {} });
+      }
+    });
     werkplekken = data.werkplekken;
     renderWerkplekList();
   }
   // Restore budget via naam+waarde koppels
   if (data.budget && data.budget.length > 0) {
+    // Migratie: oude naam "Parkeerplaats (Fedor)" / "Opbrengst vrijwilligersavond" → "Opbrengst vrijwilligersdag" (2500)
+    if (typeof data.budget[0] === 'object') {
+      data.budget.forEach(function(item) {
+        if (!item) return;
+        var n = (item.naam || '').trim().toLowerCase();
+        if (n === 'parkeerplaats (fedor)' || n === 'opbrengst vrijwilligersavond' || n === 'parkeerplaats fedor') {
+          item.naam = 'Opbrengst vrijwilligersdag';
+          item.waarde = 2500;
+          window._migratieGedaan = true;
+        }
+      });
+    }
     if (typeof data.budget[0] === 'object') {
       // Nieuw formaat: {naam, waarde} objecten
       // Stap 1: maak een lijst van alle rijen in volgorde
@@ -5091,6 +5143,11 @@ function laadVanCloud() {
     herbereken();
     renderAlles();
     setStatus('\u2714 Gesynchroniseerd', 'ok');
+    // Als er migraties zijn uitgevoerd, sla direct schoon op naar de cloud
+    if (window._migratieGedaan) {
+      window._migratieGedaan = false;
+      slaOpMet('migratie team/budget naar nieuwe namen');
+    }
   })
   .catch(function(e) {
     console.error(e);
@@ -5176,13 +5233,13 @@ document.addEventListener('visibilitychange', function() {
 
 var budgetSaveTimer = null;
 document.addEventListener('input', function(e) {
-  if (e.target.classList.contains('budget-input')) {
-    herbereken(); // alleen herberekenen, geen volledige render
+  if (e.target.classList.contains('budget-input') || e.target.classList.contains('budget-name-input')) {
+    if (e.target.classList.contains('budget-input')) herbereken();
     clearTimeout(budgetSaveTimer);
     budgetSaveTimer = setTimeout(function() {
-      renderDashboard(); // dashboard pas updaten bij opslaan
-      slaOp(); // slaOp heeft eigen debounce van 800ms, dus geen dubbele save
-    }, 400); // UI-feedback snel, cloud-save volgt via debounce
+      if (e.target.classList.contains('budget-input')) renderDashboard();
+      slaOp();
+    }, 400);
   }
 });
 
@@ -5878,7 +5935,7 @@ var teams = [
   { naam: 'Podium',        icon: '\ud83c\udfa4',  lead: 'Paul Krugers' },
   { naam: 'Horeca',        icon: '\ud83c\udf79',  lead: 'Kees Dros' },
   { naam: 'Kinderactiviteiten', icon: '\ud83c\udf88', lead: 'Jan Klok' },
-  { naam: 'Communicatie',  icon: '\ud83d\udce3',  lead: 'Jeroen van Hattum & Frank Spooren' },
+  { naam: 'PR / Communicatie',  icon: '\ud83d\udce3',  lead: 'Frank Spooren & Jeroen van Hattum & Kees Dros' },
   { naam: 'Logistiek',     icon: '\ud83d\ude9a',  lead: 'Daniel Bonne & Arie Bruin' },
   { naam: 'Overige',       icon: '\u2728',        lead: 'Overige leden Lions Club' }
 ];
@@ -5897,12 +5954,12 @@ var taken = [
   { actie: 'Melding evenementenkalender volgend jaar', leverancier: 'Gemeente Texel', opmerking: '', team: 'Coördinatie', wie: 'Maarten-Jeroen' },
   { actie: 'Marktkramen reserveren', leverancier: 'Bouthoorn', opmerking: '', team: 'Coördinatie', wie: 'Maarten-Jeroen' },
   { actie: 'EHBO regelen', leverancier: 'EHBO Rode Kruis', opmerking: 'rodekruis.nl aanvraag indienen', team: 'Coördinatie', wie: 'Maarten-Jeroen' },
-  { actie: 'Sponsor propositie maken', leverancier: '', opmerking: '', team: 'Communicatie', wie: 'Jeroen / Frank' },
-  { actie: 'Datum website aanpassen', leverancier: '', opmerking: '', team: 'Communicatie', wie: 'Jeroen / Frank' },
-  { actie: 'Bouwhekken banners plaatsen (week voor event)', leverancier: '', opmerking: '', team: 'Communicatie', wie: 'Jeroen / Frank' },
-  { actie: 'Sponsoring aanvragen bij 53 Graden Noord', leverancier: '53 Graden Noord', opmerking: 'Advertentie TC gesponsord', team: 'Communicatie', wie: 'Jeroen / Frank' },
-  { actie: 'Hoofd sponsoren benaderen', leverancier: 'Krim, TESO, Texelse Bierbrouwerij', opmerking: '', team: 'Communicatie', wie: 'Jeroen / Frank' },
-  { actie: 'Sponsorpagina TC vragen', leverancier: 'Texelse Courant', opmerking: '', team: 'Communicatie', wie: 'Jeroen / Frank' },
+  { actie: 'Sponsor propositie maken', leverancier: '', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen / Frank' },
+  { actie: 'Datum website aanpassen', leverancier: '', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen / Frank' },
+  { actie: 'Bouwhekken banners plaatsen (week voor event)', leverancier: '', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen / Frank' },
+  { actie: 'Sponsoring aanvragen bij 53 Graden Noord', leverancier: '53 Graden Noord', opmerking: 'Advertentie TC gesponsord', team: 'PR / Communicatie', wie: 'Jeroen / Frank' },
+  { actie: 'Hoofd sponsoren benaderen', leverancier: 'Krim, TESO, Texelse Bierbrouwerij', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen / Frank' },
+  { actie: 'Sponsorpagina TC vragen', leverancier: 'Texelse Courant', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen / Frank' },
   { actie: 'Eerste opzet strippenkaart', leverancier: '', opmerking: '', team: 'Kinderactiviteiten', wie: 'Jan Klok' },
   { actie: 'Workshops verzamelen', leverancier: '', opmerking: '', team: 'Kinderactiviteiten', wie: 'Jan Klok' },
   { actie: 'Actie met scholen vooraf', leverancier: '', opmerking: '', team: 'Kinderactiviteiten', wie: 'Jan Klok' },
@@ -5949,8 +6006,8 @@ var taken = [
   { actie: 'Oude brandweerauto regelen voor decoratie', leverancier: '', opmerking: '', team: 'Kinderactiviteiten', wie: 'Jan Klok' },
   { actie: 'Popquiz regelen bij Rodney Stolk', leverancier: 'Rodney Stolk', opmerking: '', team: 'Kinderactiviteiten', wie: 'Jan Klok' },
   // Communicatie
-  { actie: 'PR plan Bute 2026 maken', leverancier: '', opmerking: '', team: 'Communicatie', wie: 'Jeroen van Hattum, Frank Spooren' },
-  { actie: 'Wandeltocht regelen met online inschrijvingen', leverancier: '', opmerking: '', team: 'Communicatie', wie: 'Jeroen van Hattum' },
+  { actie: 'PR plan Bute 2026 maken', leverancier: '', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen van Hattum, Frank Spooren' },
+  { actie: 'Wandeltocht regelen met online inschrijvingen', leverancier: '', opmerking: '', team: 'PR / Communicatie', wie: 'Jeroen van Hattum' },
   // Logistiek
   { actie: 'Logistieke planning maken voor opbouw en afbouw', leverancier: '', opmerking: '', team: 'Logistiek', wie: 'Daniel Bonne' },
   // Overige
@@ -6463,6 +6520,7 @@ var werkplekken = [
   { naam: 'Kinderactiviteiten',  icon: '🎡' },
   { naam: 'Parkeren / Verkeer',  icon: '🚗' },
   { naam: 'Marktkramen',         icon: '🏪' },
+  { naam: 'PR & Communicatie',   icon: '📣' },
   { naam: 'Opbouw / Afbouw',     icon: '🔧' }
 ];
 
@@ -6552,16 +6610,17 @@ function hernoemWerkplek(i, nieuweNaam) {
 
 var vrijwilligers = [
   // Lions – alle 3 dagen aanwezig (vrijdag + zaterdag + zondag)
-  { naam: 'Maarten-Jeroen den Boer', plek: '',                    dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
-  { naam: 'Kees Dros',               plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Maarten-Jeroen den Boer', plek: '',                    rol: 'Coördinatie · Veiling fin. afwikkeling · Marktkramen contact & indeling', dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Kees Dros',               plek: 'Horeca / Bar',        rol: 'Coördinator Horeca · PR',                 dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Jan Bot',                 plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Andrew Albers',           plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Willem van Tatenhove',    plek: 'Veiling',             dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
-  { naam: 'Joop Groen',              plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
-  { naam: 'Ben Rentenaar',           plek: 'Veiling',             dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Joop Groen',              plek: 'Veiling',             rol: 'Uitstalling opbouwen',                     dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Ben Rentenaar',           plek: 'Veiling',             rol: 'Uitstalling opbouwen',                     dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Kees Boerse',             plek: 'Veiling',             rol: 'Uitstalling opbouwen',                     dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Paul Krugers',            plek: 'Podium & Geluid',     dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
   { naam: 'Arie Bruin',              plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
-  { naam: 'Morten Eschweiler',       plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
+  { naam: 'Morten Eschweiler',       plek: 'Parkeren / Verkeer',  rol: 'Coördinatie parkeerterrein (start event)', dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend','Zaterdagmiddag','Zondag'] },
 
   // Lions – vrijdag + zaterdag (geen zondag)
   { naam: 'Rodny Stolk',             plek: 'Horeca / Bar',        dagen: ['Vrijdagochtend','Vrijdagmiddag','Zaterdagochtend'] },
@@ -6574,10 +6633,10 @@ var vrijwilligers = [
 
   // Lions – alleen zaterdag
   { naam: 'Pierre Bonnet',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend','Zaterdagmiddag','Zondag'] },
-  { naam: 'Jeroen van Hattum',       plek: '',                    dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Jeroen van Hattum',       plek: 'PR & Communicatie',   rol: 'PR & Communicatie',                         dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Peerke Reijnders',        plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Jan Klok',                plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
-  { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Ingmar Veeger',           plek: 'Parkeren / Verkeer',  rol: 'Chauffeur · Marktkramen indeling',     dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
 
   // Tiger (partners/familieleden Lions) – zaterdag
   { naam: 'Titia Klok',              plek: 'Kinderactiviteiten',  dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
@@ -6586,14 +6645,22 @@ var vrijwilligers = [
   { naam: 'Elze Albers',             plek: 'Ingang / Kassa',      dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Ina Pool',                plek: 'Ingang / Kassa',      dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
   { naam: 'Josephine Witte',         plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
-  { naam: 'Astrid van der Vis',      plek: 'Marktkramen',         dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Astrid van der Vis',      plek: 'Veiling',             rol: 'Afrekenen veilingkavels na afloop',         dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
 
   // Vrijwilligers (extern) – zaterdag ochtend
   { naam: 'Luc Reijnders',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
   { naam: 'Juup Biesboer',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
   { naam: 'Rick de Smidt',           plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
   { naam: 'Robin Boerhorst',         plek: 'Horeca / Bar',        dagen: ['Zaterdagochtend'] },
-  { naam: 'Floor den Boer',          plek: 'Marktkramen',         dagen: ['Zaterdagochtend','Zaterdagmiddag'] }
+
+  // Parkeren / Verkeer – chauffeurs
+  { naam: 'Martijn Eelman',          plek: 'Parkeren / Verkeer',  rol: 'Chauffeur',                                 dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Brandweer man 1',         plek: 'Parkeren / Verkeer',  rol: 'Chauffeur (brandweer)',                     dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Brandweer man 2',         plek: 'Parkeren / Verkeer',  rol: 'Chauffeur (brandweer)',                     dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+  { naam: 'Brandweer man 3',         plek: 'Parkeren / Verkeer',  rol: 'Chauffeur (brandweer)',                     dagen: ['Zaterdagochtend','Zaterdagmiddag'] },
+
+  // PR & Communicatie
+  { naam: 'Frank Spooren',           plek: 'PR & Communicatie',   rol: 'PR & Communicatie',                         dagen: ['Zaterdagochtend','Zaterdagmiddag'] }
 ];
 var vrijwDragSrc = null;
 
@@ -6692,8 +6759,9 @@ function vrijwItemHTML(idx, v) {
   var shiftLabel = v.shift || 'Ochtend';
   var dagKort = { 'Vrijdagochtend':'Vrijdag ochtend', 'Vrijdagmiddag':'Vrijdag middag', 'Zaterdagochtend':'Zaterdag ochtend', 'Zaterdagmiddag':'Zaterdag middag', 'Zondag':'Zondag' };
   var dagenLabel = (v.dagen && v.dagen.length) ? v.dagen.map(function(d){return dagKort[d]||d;}).join(', ') : (v.shift || '');
+  var rolLabel = v.rol ? '<span class="vrijw-rol" style="display:block;font-size:0.7rem;color:#7A6030;font-style:italic;margin-top:2px;">' + escHtml(v.rol) + '</span>' : '';
   return '<li class="vrijw-item" draggable="true" data-vidx="' + idx + '">' +
-    '<div class="vrijw-item-info">' + v.naam + (v.tel ? ' · ' + v.tel : '') + '</div>' +
+    '<div class="vrijw-item-info">' + v.naam + (v.tel ? ' · ' + v.tel : '') + rolLabel + '</div>' +
     (dagenLabel ? '<span class="vrijw-shift" style="font-size:0.62rem;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + dagenLabel + '">' + dagenLabel + '</span>' : '') +
     '<button class="vrijw-edit-btn" onclick="event.stopPropagation();bewerkVrijwilliger(' + idx + ')" title="Bewerken">✏</button>' +
     '<button class="vrijw-del-btn" onclick="verwijderVrijwilliger(' + idx + ')">✕</button>' +
@@ -6932,20 +7000,20 @@ function voegTaakToe() {
 // ── DRAAIBOEK ──────────────────────────────────────────────
 // ── DRAAIBOEK DATA (per dag) ──────────────────────────────
 var draaiboekData = [
-  { tijd:'5/6 april 2026', onderdeel:'Aankondiging VVV-nieuwsbrief (Paasweekend)', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Voorkeursmoment voor aankondiging in VVV-nieuwsbrief', actie:'', fase:'programma' },
+  { tijd:'5/6 april 2026', onderdeel:'Aankondiging VVV-nieuwsbrief (Paasweekend)', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Voorkeursmoment voor aankondiging in VVV-nieuwsbrief', actie:'', fase:'programma' },
   { tijd:'30 april 2026', onderdeel:'Uiterste datum logos / advertenties BUTE-pagina bij Morten', verantw:'Morten Eschweiler', locatie:'', benodigd:'', status:'gepland', notities:'Logos en advertenties voor de BUTE-pagina moeten binnen zijn', actie:'Logos ophalen bij sponsoren', fase:'programma' },
-  { tijd:'± 1 mei 2026', onderdeel:'Uiterste aanlevermoment kopij De Vakantiekrant', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Minstens een week vooraf aanleveren', actie:'Kopij aanleveren', fase:'programma' },
-  { tijd:'8 mei 2026', onderdeel:'Verschijning De Vakantiekrant met aankondiging BUTE', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Aankondiging voorafgaand aan BUTE', actie:'', fase:'programma' },
-  { tijd:'8 mei 2026', onderdeel:'Streefdatum BUTE-pagina helemaal af', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'BUTE-pagina volledig gereed', actie:'Pagina controleren', fase:'programma' },
-  { tijd:'11 mei 2026', onderdeel:'BUTE-pagina aanleveren / plaatsen voor krant van 13 mei', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Aanleveren voor Texelse Courant van 13 mei', actie:'Pagina aanleveren', fase:'programma' },
-  { tijd:'13 mei 2026', onderdeel:'Verschijning Texelse Courant (gecombineerd i.v.m. Hemelvaart)', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Gecombineerde krant, hopelijk ook met BUTE-pagina', actie:'', fase:'programma' },
-  { tijd:'15 mei 2026', onderdeel:'Verschijning Texel dit Weekend met aankondiging BUTE', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Aankondiging voorafgaand aan BUTE', actie:'', fase:'programma' },
-  { tijd:'15 mei 2026', onderdeel:'BuitenGewoon — twee dagen vóór BUTE (Hemelvaartsdag)', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Op Hemelvaartsdag', actie:'', fase:'programma' },
+  { tijd:'± 1 mei 2026', onderdeel:'Uiterste aanlevermoment kopij De Vakantiekrant', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Minstens een week vooraf aanleveren', actie:'Kopij aanleveren', fase:'programma' },
+  { tijd:'8 mei 2026', onderdeel:'Verschijning De Vakantiekrant met aankondiging BUTE', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Aankondiging voorafgaand aan BUTE', actie:'', fase:'programma' },
+  { tijd:'8 mei 2026', onderdeel:'Streefdatum BUTE-pagina helemaal af', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'BUTE-pagina volledig gereed', actie:'Pagina controleren', fase:'programma' },
+  { tijd:'11 mei 2026', onderdeel:'BUTE-pagina aanleveren / plaatsen voor krant van 13 mei', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Aanleveren voor Texelse Courant van 13 mei', actie:'Pagina aanleveren', fase:'programma' },
+  { tijd:'13 mei 2026', onderdeel:'Verschijning Texelse Courant (gecombineerd i.v.m. Hemelvaart)', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Gecombineerde krant, hopelijk ook met BUTE-pagina', actie:'', fase:'programma' },
+  { tijd:'15 mei 2026', onderdeel:'Verschijning Texel dit Weekend met aankondiging BUTE', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Aankondiging voorafgaand aan BUTE', actie:'', fase:'programma' },
+  { tijd:'15 mei 2026', onderdeel:'BuitenGewoon — twee dagen vóór BUTE (Hemelvaartsdag)', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Op Hemelvaartsdag', actie:'', fase:'programma' },
   { tijd:'Feb / mrt 2026', onderdeel:'Clubavond: oproep benaderen organisaties voor BUTE-pagina', verantw:'Coördinator', locatie:'Clubavond', benodigd:'', status:'gepland', notities:'Oproep doen voor benaderen organisaties en bekenden', actie:'Agenderen voor clubavond', fase:'opbouw' },
-  { tijd:'Week voor BUTE', onderdeel:'Mail naar leden', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Informatiemail naar alle leden', actie:'Mail opstellen', fase:'opbouw' },
-  { tijd:'Week voor BUTE', onderdeel:'Mail naar standhouders / aanbieders activiteiten', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Praktische informatie voor standhouders', actie:'Mail opstellen', fase:'opbouw' },
-  { tijd:'Week voor BUTE', onderdeel:'Mail naar Joscha en Inge', verantw:'Communicatie', locatie:'Bonte Belevenis', benodigd:'', status:'gepland', notities:'Laatste afstemming locatie', actie:'Mail opstellen', fase:'opbouw' },
-  { tijd:'Na afloop', onderdeel:'Persbericht opbrengst naar lokale media', verantw:'Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Na bekend worden opbrengst — uitdeling vermelden', actie:'Persbericht schrijven', fase:'afbouw' }
+  { tijd:'Week voor BUTE', onderdeel:'Mail naar leden', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Informatiemail naar alle leden', actie:'Mail opstellen', fase:'opbouw' },
+  { tijd:'Week voor BUTE', onderdeel:'Mail naar standhouders / aanbieders activiteiten', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Praktische informatie voor standhouders', actie:'Mail opstellen', fase:'opbouw' },
+  { tijd:'Week voor BUTE', onderdeel:'Mail naar Joscha en Inge', verantw:'PR / Communicatie', locatie:'Bonte Belevenis', benodigd:'', status:'gepland', notities:'Laatste afstemming locatie', actie:'Mail opstellen', fase:'opbouw' },
+  { tijd:'Na afloop', onderdeel:'Persbericht opbrengst naar lokale media', verantw:'PR / Communicatie', locatie:'', benodigd:'', status:'gepland', notities:'Na bekend worden opbrengst — uitdeling vermelden', actie:'Persbericht schrijven', fase:'afbouw' }
 ];
 
 var draaiboekVrijdag = [
