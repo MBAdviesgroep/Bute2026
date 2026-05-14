@@ -201,6 +201,34 @@ body {
   font-weight: 600;
   margin-bottom: 10px;
 }
+.team-rollen {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 8px 0 0;
+  border-top: 1px dashed rgba(232,160,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.team-rollen li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #5A4A20;
+  line-height: 1.35;
+}
+.team-rol-naam {
+  font-weight: 600;
+  color: #7A6030;
+  flex-shrink: 0;
+}
+.team-rol-wie {
+  color: #1C1400;
+  text-align: right;
+  font-weight: 500;
+}
 .team-tasks {
   list-style: none;
   border-top: 1px solid rgba(232,160,0,0.2);
@@ -4857,7 +4885,7 @@ function verwerkData(data) {
   // Garandeer dat nieuwe verplichte draaiboek-items aanwezig zijn (worden anders door cloud overschreven)
   var verplichteZaterdag = [
     { tijd:'09:30', onderdeel:'Centrale Briefing — alle vrijwilligers', verantw:'Maarten-Jeroen den Boer', locatie:'Restaurant Bonte Belevenis', benodigd:'Taakoverzicht, presentielijst, koffie/thee', status:'gepland', notities:'Iedereen aanwezig — kort doornemen rolverdeling, tijden en aandachtspunten', actie:'Briefingdocument afdrukken', fase:'opbouw' },
-    { tijd:'14:30 – 14:45', onderdeel:'Optreden The Folkies — 3 jonge Texelse meiden', verantw:'Podium / Technisch', locatie:'Hoofdpodium', benodigd:'Microfoons, monitors', status:'bevestigd', notities:'Kort optreden, vandaag geregeld', actie:'Soundcheck inplannen', fase:'programma' }
+    { tijd:'14:30 – 15:00', onderdeel:'Optreden The Folkies — 3 jonge Texelse meiden', verantw:'Podium / Technisch', locatie:'Hoofdpodium', benodigd:'Microfoons, monitors', status:'bevestigd', notities:'Kort optreden, geregeld', actie:'Soundcheck inplannen', fase:'programma' }
   ];
   verplichteZaterdag.forEach(function(nieuw) {
     var bestaat = draaiboekZaterdag.some(function(d) {
@@ -4901,14 +4929,40 @@ function verwerkData(data) {
   if (data.budget && data.budget.length > 0) {
     if (typeof data.budget[0] === 'object') {
       // Nieuw formaat: {naam, waarde} objecten
-      data.budget.forEach(function(item) {
-        if (!item || item.waarde === '' || item.waarde === undefined) return;
-        document.querySelectorAll('.budget-input').forEach(function(el) {
+      // Stap 1: maak een lijst van alle rijen in volgorde
+      var allInputs = Array.prototype.slice.call(document.querySelectorAll('.budget-input'));
+      var gebruiktInputs = {}; // index -> true als al gevuld via naam-match
+      // Stap 2: eerst alle items proberen te matchen op naam
+      data.budget.forEach(function(item, i) {
+        if (!item || item.naam === undefined) return;
+        var doelNaam = (item.naam || '').trim().toLowerCase();
+        for (var j = 0; j < allInputs.length; j++) {
+          if (gebruiktInputs[j]) continue;
+          var el = allInputs[j];
           var tr = el.closest('tr');
           var nameEl = tr ? tr.querySelector('.budget-name-input') : null;
-          if (nameEl && nameEl.value === item.naam) el.value = item.waarde;
-        });
+          if (nameEl && (nameEl.value || '').trim().toLowerCase() === doelNaam) {
+            if (item.waarde !== '' && item.waarde !== undefined) el.value = item.waarde;
+            gebruiktInputs[j] = true;
+            item._gematcht = true;
+            break;
+          }
+        }
       });
+      // Stap 3: items zonder naam-match → toepassen op positie + naam overschrijven
+      // (dit dekt het geval waarin de gebruiker een rij hernoemd heeft)
+      data.budget.forEach(function(item, i) {
+        if (!item || item._gematcht) return;
+        var el = allInputs[i];
+        if (!el || gebruiktInputs[i]) return;
+        var tr = el.closest('tr');
+        var nameEl = tr ? tr.querySelector('.budget-name-input') : null;
+        if (nameEl && item.naam !== undefined && item.naam !== '') nameEl.value = item.naam;
+        if (item.waarde !== '' && item.waarde !== undefined) el.value = item.waarde;
+        gebruiktInputs[i] = true;
+      });
+      // Cleanup tijdelijke flag
+      data.budget.forEach(function(item) { if (item) delete item._gematcht; });
     } else {
       // Oud formaat: array van waarden op positie (backwards compat)
       var inputs = document.querySelectorAll('.budget-input');
@@ -5091,6 +5145,35 @@ function _doSlaOp() {
   .catch(function(e) { isSaving = false; console.error(e); setStatus('\u26a0 Cloud mislukt — lokaal bewaard', 'fout'); });
 }
 
+// ── FLUSH BIJ REFRESH / TAB SLUITEN ──────────────────────────
+// Als er een debounced save of budget-save in de wacht staat, vuur 'm direct af
+// vóór de pagina wordt verlaten. Anders verliest een snelle refresh wijzigingen.
+function flushPendingSaves() {
+  var hadPending = false;
+  if (_debounceTimer) { clearTimeout(_debounceTimer); _debounceTimer = null; hadPending = true; }
+  if (typeof budgetSaveTimer !== 'undefined' && budgetSaveTimer) { clearTimeout(budgetSaveTimer); budgetSaveTimer = null; hadPending = true; }
+  if (!hadPending) return;
+  try {
+    var data = verzamelData();
+    try { localStorage.setItem('bute2026_backup', JSON.stringify(data)); } catch(e) {}
+    var body = JSON.stringify(data);
+    // keepalive: true zorgt dat de browser de PUT-request afmaakt ook na unload.
+    // Limiet 64KB body — voor grotere payloads bouwen we hierboven al op via change/blur.
+    fetch(WORKER_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: body,
+      keepalive: true
+    }).catch(function(){});
+  } catch(e) { console.error('flushPendingSaves', e); }
+}
+window.addEventListener('beforeunload', flushPendingSaves);
+window.addEventListener('pagehide', flushPendingSaves);
+// Op mobiel triggert beforeunload niet altijd, dus ook bij hidden visibility flushen
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') flushPendingSaves();
+});
+
 var budgetSaveTimer = null;
 document.addEventListener('input', function(e) {
   if (e.target.classList.contains('budget-input')) {
@@ -5102,6 +5185,26 @@ document.addEventListener('input', function(e) {
     }, 400); // UI-feedback snel, cloud-save volgt via debounce
   }
 });
+
+// Direct opslaan zodra het veld blur't / wijzigt — geen debounce, dus
+// hard refresh direct na een edit gaat niet meer verloren.
+document.addEventListener('change', function(e) {
+  if (e.target.classList.contains('budget-input') || e.target.classList.contains('budget-name-input')) {
+    clearTimeout(budgetSaveTimer); budgetSaveTimer = null;
+    clearTimeout(_debounceTimer); _debounceTimer = null;
+    herbereken();
+    renderDashboard();
+    _doSlaOp();
+  }
+});
+// blur op naam-veld ook direct opslaan (sommige browsers vuren geen 'change' bij identieke waarde)
+document.addEventListener('blur', function(e) {
+  if (e.target.classList && (e.target.classList.contains('budget-input') || e.target.classList.contains('budget-name-input'))) {
+    clearTimeout(budgetSaveTimer); budgetSaveTimer = null;
+    clearTimeout(_debounceTimer); _debounceTimer = null;
+    _doSlaOp();
+  }
+}, true);
 
 // ── BEGROTING RIJEN TOEVOEGEN/VERWIJDEREN ──────────────────
 function maakBudgetRij(type) {
@@ -5763,10 +5866,15 @@ function printVrijwilligers() {
 var teams = [
   { naam: 'Coördinatie', icon: '\ud83c\udfaf', lead: 'Maarten-Jeroen den Boer' },
   { naam: 'Vergunningen',  icon: '\u2696\ufe0f',  lead: 'Morten Eschweiler' },
-  { naam: 'Veiling',       icon: '\ud83d\udd28',  lead: 'Ingmar Veeger & Maarten-Jeroen den Boer' },
-  { naam: 'Opbouw veilingruimte', icon: '\ud83e\udd29', lead: 'Ben Rentenaar, Kees Boerse & Joop Groen' },
+  { naam: 'Veiling',       icon: '\ud83d\udd28',  lead: 'Ingmar Veeger & Maarten-Jeroen den Boer & Astrid van der Vis & Ben Rentenaar & Kees Boerse & Joop Groen',
+    rollen: [
+      { rol: 'Veilingmakelaar 1',           wie: 'Ingmar Veeger' },
+      { rol: 'Veilingmakelaar 2',           wie: 'Maarten-Jeroen den Boer' },
+      { rol: 'Administratie & afrekenen',   wie: 'Astrid van der Vis' },
+      { rol: 'Opbouw presentatieruimte',    wie: 'Ben Rentenaar, Kees Boerse & Joop Groen' }
+    ]
+  },
   { naam: 'Parkeren',      icon: '\ud83d\ude97',  lead: 'Martijn Eelman & Brandweer (3 man)' },
-  { naam: 'Administratie & Afrekenen', icon: '\ud83d\udcb3', lead: 'Astrid van der Vis' },
   { naam: 'Podium',        icon: '\ud83c\udfa4',  lead: 'Paul Krugers' },
   { naam: 'Horeca',        icon: '\ud83c\udf79',  lead: 'Kees Dros' },
   { naam: 'Kinderactiviteiten', icon: '\ud83c\udf88', lead: 'Jan Klok' },
@@ -5909,6 +6017,9 @@ function renderTeamGrid() {
       '<div class="team-icon">' + team.icon + '</div>' +
       '<div class="team-name">' + team.naam + '</div>' +
       '<div class="team-lead">\ud83d\udc64 ' + team.lead + '</div>' +
+      (team.rollen && team.rollen.length ? '<ul class="team-rollen">' + team.rollen.map(function(r) {
+        return '<li><span class="team-rol-naam">' + r.rol + '</span><span class="team-rol-wie">' + r.wie + '</span></li>';
+      }).join('') + '</ul>' : '') +
       '<div class="team-progress"><div class="team-progress-fill" style="width:' + teamPct + '%;background:' + progKleur + ';"></div></div>' +
       '<div class="team-progress-label">' + teamKlaar + ' / ' + teamTaken.length + ' klaar</div>' +
       '<div class="drag-hint">Sleep taken hierheen</div>' +
@@ -6865,7 +6976,7 @@ var draaiboekZaterdag = [
   { tijd:'13:00 – 13:30', onderdeel:'Rad van Fortuin — Ronde 1', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, microfoon, prijzen', status:'gepland', notities:'Deelnemers werven uit publiek', actie:'', fase:'programma' },
   { tijd:'13:30 – 14:00', onderdeel:'Artex Dance — Denise Barhorst', verantw:'Denise Barhorst', locatie:'Hoofdpodium', benodigd:'Muziekinstallatie, ruimte podium', status:'gepland', notities:'Dansdemonstratie / -show', actie:'Muziek playlist aanleveren', fase:'programma' },
   { tijd:'14:00 – 14:15', onderdeel:'DJ Paul — Tussenset', verantw:'DJ Paul', locatie:'Hoofdpodium', benodigd:'DJ-set actief', status:'gepland', notities:'', actie:'', fase:'programma' },
-  { tijd:'14:30 – 14:45', onderdeel:'Optreden The Folkies — 3 jonge Texelse meiden', verantw:'Podium / Technisch', locatie:'Hoofdpodium', benodigd:'Microfoons, monitors', status:'bevestigd', notities:'Kort optreden, vandaag geregeld', actie:'Soundcheck inplannen', fase:'programma' },
+  { tijd:'14:30 – 15:00', onderdeel:'Optreden The Folkies — 3 jonge Texelse meiden', verantw:'Podium / Technisch', locatie:'Hoofdpodium', benodigd:'Microfoons, monitors', status:'bevestigd', notities:'Kort optreden, geregeld', actie:'Soundcheck inplannen', fase:'programma' },
   { tijd:'14:15 – 15:00', onderdeel:'Rad van Fortuin — Ronde 2', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, microfoon, prijzen', status:'gepland', notities:'', actie:'', fase:'programma' },
   { tijd:'15:00 – 16:00', onderdeel:'Artiest 2 — Live optreden (60 min)', verantw:'Artiest 2 / Technisch', locatie:'Hoofdpodium', benodigd:'Technische rider artiest 2', status:'bevestigen', notities:'Setlist ontvangen?', actie:'Rider & contract bevestigen', fase:'programma' },
   { tijd:'16:00 – 16:15', onderdeel:'Rad van Fortuin — Finale ronde', verantw:'Rad van Fortuin team', locatie:'Podiumzijde', benodigd:'Rad, microfoon, prijzen', status:'gepland', notities:'Hoofdprijs uitreiken', actie:'', fase:'programma' },
@@ -6971,6 +7082,17 @@ function renderDraaiboek() {
   fasenTeTonenIds.forEach(function(faseId) {
     var fase = DB_FASEN.find(function(f) { return f.id === faseId; });
     var faseItems = gefilterd.filter(function(r) { return r.fase === faseId; });
+    // Sorteer op begintijd binnen elke fase (HH:MM aan begin van tijd-string)
+    faseItems.sort(function(a, b) {
+      var ta = (a.tijd || '').match(/^\s*(\d{1,2}):(\d{2})/);
+      var tb = (b.tijd || '').match(/^\s*(\d{1,2}):(\d{2})/);
+      if (!ta && !tb) return 0;
+      if (!ta) return 1;
+      if (!tb) return -1;
+      var ma = parseInt(ta[1],10)*60 + parseInt(ta[2],10);
+      var mb = parseInt(tb[1],10)*60 + parseInt(tb[2],10);
+      return ma - mb;
+    });
     if (!faseItems.length) return;
 
     html += '<div class="db-phase-header">' +
